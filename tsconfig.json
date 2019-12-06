@@ -6,6 +6,7 @@
         "esModuleInterop": true,
         "moduleResolution": "node",
         "diagnostics": true,
+        "experimentalDecorators": true,
         "outDir": "dist",
         "allowJs": true,
         "lib": [
@@ -23,6 +24,8 @@
             "@components/*": ["typescript/components/*"],
             "@utils/*": ["typescript/utils/*"],
             "@settings/*": ["typescript/settings/*"],
+            "@styles/*": ["typescript/styles/*"],
+            "@events/*": ["typescript/events/*"],
         },
     },
     "include": [

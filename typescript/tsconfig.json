@@ -5,6 +5,7 @@
         "sourceMap": true,
         "esModuleInterop": true,
         "moduleResolution": "node",
+        "experimentalDecorators": true,
         "diagnostics": true,
         "outDir": "dist",
         "allowJs": true,
@@ -24,6 +25,8 @@
             "@components/*": ["./components/*"],
             "@utils/*": ["./utils/*"],
             "@settings/*": ["settings/*"],
+            "@styles/*": ["styles/*"],
+            "@events/*": ["events/*"],
         },
     },
     "include": [

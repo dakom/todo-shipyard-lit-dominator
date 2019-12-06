@@ -1,3 +1,5 @@
+pub mod events;
+
 use cfg_if::cfg_if;
 use log::{info, Level};
 use wasm_bindgen::prelude::*;
@@ -35,3 +37,4 @@ pub fn init_app() {
 	init_panic();
     init_log();
 }
+

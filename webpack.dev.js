@@ -48,6 +48,8 @@ module.exports = {
             "@components": path.resolve(__dirname, "typescript/components"),
             "@utils": path.resolve(__dirname, "typescript/utils"),
             "@settings": path.resolve(__dirname, "typescript/settings"),
+            "@styles": path.resolve(__dirname, "typescript/styles"),
+            "@events": path.resolve(__dirname, "typescript/events"),
         }
     },
     devtool: 'inline-source-map',
