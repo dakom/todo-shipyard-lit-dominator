@@ -1,6 +1,7 @@
 export enum BridgeEvent {
     AddTodo,
-    RemoveTodo
+    UpdateTodo,
+    RemoveTodo,
 }
 
 /*

@@ -4,6 +4,8 @@ use cfg_if::cfg_if;
 use log::{info, Level};
 use wasm_bindgen::prelude::*;
 
+
+#[cfg(feature = "wee_alloc")]
 #[global_allocator]
 static ALLOC: wee_alloc::WeeAlloc = wee_alloc::WeeAlloc::INIT;
 

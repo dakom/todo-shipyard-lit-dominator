@@ -36,6 +36,14 @@
         "node_modules",
         "dist",
         "build",
-        "coverage"
+        "coverage",
+        /*  needed so webpack won't try to compile it...
+            but just seems to work fine even though it's excluded?!?
+
+            if jest ever stops working just make a separate tsconfig-tests.json
+            also note that the tsconfig.json inside of the typescript folder does NOT ignore
+            since that's only used for the IDE anyway
+         */
+        "typescript/tests" 
     ]
 }
