@@ -1,5 +1,3 @@
-const fs = require('fs');
-
 import { BridgeEvent } from "@events/events";
 import { get_enum_pairs, enum_pairs_to_list } from "@utils/enums";
 const {get_bridge_event_pairs} = require("../../_static/wasm/core/pkg/my_core");
