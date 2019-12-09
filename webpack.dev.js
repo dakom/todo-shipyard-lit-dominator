@@ -34,7 +34,11 @@ module.exports = {
                 test: /.ts$/,
                 use: [
                     { loader: 'ts-loader', options: { transpileOnly: true } }
+                ],
+                exclude: [
+                    path.resolve(__dirname, "typescript/tests/**/*"),
                 ]
+
             },
             {
                 test: /\.css$/i,
