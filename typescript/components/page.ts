@@ -1,33 +1,17 @@
 import {LitElement, html, css, customElement} from "lit-element";
-import {todo_app} from "@styles/todo-app-css";
-import {todo_base} from "@styles/todo-base-css";
+import {common_css} from "@styles/common";
 import {send_event, BridgeEvent} from "@events/events";
 const ENTER_KEY = 13;
 
-export class App extends LitElement {
+export class MainPage extends LitElement {
     static get styles() {
-        return [todo_app, todo_base];
-    }
-
-    //elements aren't available until _after_ mounting
-    //no need to cache them until requested
-    _elements: {input: HTMLInputElement};
-    get_elements() {
-        //cache the element lookups
-        if(!this._elements) {
-            this._elements = {
-                input: this.shadowRoot.getElementById("input-text") as HTMLInputElement
-            };
-        }
-
-        return this._elements;
+        return common_css;
     }
 
     render() {
         const check_keypress = (evt:KeyboardEvent) => {
             if(evt.keyCode === ENTER_KEY) {
-                const {value} = this.get_elements().input;
-
+                const {value} = evt.target as HTMLInputElement;
                 send_event([BridgeEvent.AddTodo, value]);
             }
         }
@@ -40,6 +24,7 @@ export class App extends LitElement {
             </section>
             <footer class="info">
                 <p>Double-click to edit a todo</p>
+                <p><a href="https://github.com/dakom/todo-shipyard-lit"><u>Repo on Github</u></a></p>
             </footer>
         `
     }

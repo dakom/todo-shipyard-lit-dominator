@@ -3,6 +3,8 @@ use num_traits::FromPrimitive;
 use wasm_bindgen::prelude::*;
 use std::convert::{TryFrom, TryInto};
 use cfg_if::cfg_if;
+use super::rust_events::*;
+
 cfg_if! {
     if #[cfg(feature = "ts_test")] {
         use strum_macros::{EnumIter, AsRefStr};
@@ -10,14 +12,17 @@ cfg_if! {
     }
 }
 
+//Events as sent from JS (straight enum)
 #[cfg_attr(feature = "ts_test", derive(EnumIter, AsRefStr))]
 #[derive(FromPrimitive, Copy, Clone, Debug)]
 #[repr(u32)]
 enum BridgeEvent {
+    ChangePage,
     AddTodo,
     UpdateTodo,
     RemoveTodo,
 }
+
 
 impl TryFrom<u32> for BridgeEvent {
     type Error = String;
@@ -27,26 +32,38 @@ impl TryFrom<u32> for BridgeEvent {
     }
 }
 
-#[wasm_bindgen]
-pub fn send_event_to_rust(evt_type: u32, evt_data: JsValue) -> Result<(), JsValue> {
+impl TryFrom<u32> for Page {
+    type Error = String;
+
+    fn try_from(value: u32) -> Result<Self, Self::Error> {
+        FromPrimitive::from_u32(value).ok_or_else(|| format!("Page: {} is outside of range!", value))
+    }
+}
+
+pub fn convert_bridge_event(evt_type:u32, evt_data:JsValue) -> Result<Option<Event>, JsValue> {
     let evt_type:BridgeEvent = 
         evt_type.try_into()
             .map_err(|err| JsValue::from_str(&format!("unsupported bridge event! {}", evt_type)))?;
 
+
     match evt_type {
+        BridgeEvent::ChangePage => {
+            let data:Page = (evt_data.as_f64().ok_or(JsValue::from_str(&"unable to get page as number!"))? as u32).try_into()?;
+            Ok(Some(Event::ChangePage(data)))
+        },
         BridgeEvent::AddTodo => {
-            log::info!("TODO: Deserialize evt_data as a string!");
-            //TODO - then handle it! push to event queue, add component, etc.
+            let data:String = serde_wasm_bindgen::from_value(evt_data)?;
+            Ok(Some(Event::AddTodo(data)))
         },
         BridgeEvent::RemoveTodo => {
-            log::info!("TODO: remove todo!");
+            Ok(None)
+            //Err(JsValue::from_str("TODO: remove todo!"))
         },
         BridgeEvent::UpdateTodo => {
-            log::info!("TODO: remove todo!");
+            Ok(None)
+            //Err(JsValue::from_str("TODO: update todo!"))
         }
-    };
-
-    Ok(())
+    }
 }
 
 cfg_if! {

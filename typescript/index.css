@@ -1,32 +1,35 @@
 
-/* all tags */
-html {
-  box-sizing: border-box;
-}
-*, *:before, *:after {
-  box-sizing: inherit;
-}
+    html,
+    body {
+        margin: 0;
+        padding: 0;
+    }
 
-html,body {
-	padding: 0;
-	margin: 0;
-  font-family: Arial, Helvetica, sans-serif;
-}
+    button {
+        margin: 0;
+        padding: 0;
+        border: 0;
+        background: none;
+        font-size: 100%;
+        vertical-align: baseline;
+        font-family: inherit;
+        font-weight: inherit;
+        color: inherit;
+        -webkit-appearance: none;
+        appearance: none;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
 
-canvas {
-    position: absolute;
-    top: 0;
-    left: 0;
-    padding: 0;
-    margin: 0;
-}
-
-a {
-	text-decoration: none;
-}
-.github-banner {
-    position: absolute;
-    top: 0;
-    left: 0;
-    z-index: 1000;
-}
+    body {
+        font: 14px 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        line-height: 1.4em;
+        background: #f5f5f5;
+        color: #111111;
+        min-width: 230px;
+        max-width: 550px;
+        margin: 0 auto;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        font-weight: 300;
+    }

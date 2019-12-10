@@ -1,5 +1,8 @@
-import {App} from "@components/app";
+import {MainPage} from "@components/page";
+import {ItemsContainer} from "@components/items";
 
 export const register_web_components = () => {
-    customElements.define("my-app", App);
+    customElements.define("main-page", MainPage);
+    customElements.define("items-container", ItemsContainer);
 }
+
