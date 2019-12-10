@@ -19,10 +19,11 @@ pub fn process_event_queue(world:&mut World, event_queue:&mut Vec<Event>, now:f6
 
                 if let Some(key) = key {
                     world.run::<(EntitiesMut, &mut Order, &mut Dirty), _>(|(ref mut entities, ref mut orders, ref mut dirty)| {
-                        if let Some(order) = orders.iter().next() {
+                        if let Some((id, order)) = orders.iter().with_id().next() {
                             order.0.push(key);
+                            entities.add_component(dirty, Dirty{}, id);
                         } else {
-                            entities.add_entity((orders, dirty), (Order(Vec::new()), Dirty{}));
+                            entities.add_entity((orders, dirty), (Order(vec![key]), Dirty{}));
                         }
                     });
                 }

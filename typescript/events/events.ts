@@ -36,7 +36,6 @@ export const register_event_sender = (_event_queue_ptr:number) => (_send_event_t
     send_event_to_rust = _send_event_to_rust;
 
     send_event([BridgeEvent.ChangePage, Page.Init]);
-    send_event([BridgeEvent.ChangePage, Page.Init]);
     send_event([BridgeEvent.AddTodo, "temp test!"]);
     send_event([BridgeEvent.RemoveTodo, 0]);
 }

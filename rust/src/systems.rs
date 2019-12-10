@@ -15,7 +15,7 @@ pub fn run_systems_tick(world:&mut World, event_queue:&mut Vec<Event>, now:f64) 
 pub fn run (order:&Order, items:&Item, dirty:&Dirty) {
     //TODO - maybe don't even maintain separate order
     //See: https://github.com/leudz/shipyard/blob/85acb2b8b39b6e4c252bba3140a5ff1c54d30a62/src/lib.rs#L1217
-    if let Some(order) = order.iter().next() {
+    if let Some((order, _dirty)) = (order, dirty).iter().next() {
         //TODO - would be nice to avoid the copy
         let item_and_keys:Vec<(Key, &str)> = 
             items
@@ -36,7 +36,7 @@ pub fn run (order:&Order, items:&Item, dirty:&Dirty) {
                 })
                 .collect();
 
-        dom::items::rewrite_items(&data);
+        dom::items::rewrite_items(&data).unwrap();
     }
     // for item in items.iter() {
     //     log::info!("in system! {}", item.0)
@@ -53,15 +53,16 @@ pub fn run (items:&Item, dirty:&Dirty) {
 }
 
 #[system(RenderClearDirty)]
-pub fn run (entities: &EntitiesMut, dirties:&mut Dirty) {
-    let entity_ids = 
-        dirties
+pub fn run (mut dirties:&mut Dirty) {
+    let entity_ids:Vec<Key> = 
+        (&dirties)
             .iter()
             .with_id()
-            .map(|(id, val)| id);
+            .map(|(id, _)| id)
+            .collect();
 
     for id in entity_ids {
-        Remove::<(Dirty,)>::remove((&mut dirties), id);
+        Remove::<(Dirty,)>::remove((&mut dirties,), id);
     }
 }
 
