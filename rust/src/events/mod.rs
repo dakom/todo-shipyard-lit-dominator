@@ -1,7 +1,5 @@
-mod bridge_events;
-mod rust_events;
-mod event_queue;
+mod events;
+pub use events::*;
 
-pub use bridge_events::*;
-pub use rust_events::*;
-pub use event_queue::*;
+pub mod convert_events;
+pub mod process_events;

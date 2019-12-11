@@ -1,21 +1,20 @@
-use crate::events::Page;
 use wasm_bindgen::prelude::*;
-use web_sys::{window};
 use super::common::*;
 
 pub const PAGE_ID:&'static str = "page";
-const MAIN_PAGE_ELEM:&'static str = "main-page";
 
-pub fn change_page(page:Page) -> Result<(), JsValue> {
+pub fn start_page() -> Result<(), JsValue> {
     let document = get_document()?;
-
-    if let Some(elem) = document.get_element_by_id(PAGE_ID) {
-        elem.remove();
-    }
     let body = get_body()?;
-    let elem = document.create_element(MAIN_PAGE_ELEM)?;
+    let elem = document.create_element("main-page")?;
     elem.set_id(PAGE_ID);
     body.append_child(&elem)?;
 
     Ok(())
+}
+
+pub fn get_shadow_root() -> Result<web_sys::ShadowRoot, JsValue> {
+    let document = get_document()?;
+    let page_element = document.get_element_by_id(PAGE_ID).ok_or(JsValue::from_str("couldn't get page container!!"))?;
+    page_element.shadow_root().ok_or(JsValue::from_str("couldn't get page shadow root!!"))
 }

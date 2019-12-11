@@ -1,8 +1,9 @@
-import {LitElement, html, css, customElement} from "lit-element";
-import {common_css} from "@styles/common";
-import {send_event, BridgeEvent} from "@events/events";
+import { BridgeEvent, send_event } from "@events/events";
+import { common_css } from "@styles/common";
+import { customElement, html, LitElement } from "lit-element";
 const ENTER_KEY = 13;
 
+@customElement("top-input")
 export class TopInput extends LitElement {
     static get styles() {
         return common_css;
@@ -20,4 +21,7 @@ export class TopInput extends LitElement {
             <input id="input-text" class="new-todo" @keydown=${evt => check_keypress(evt)} placeholder="What needs to be done?" autofocus />
         `
     }
+}
+
+export default () => { 
 }
