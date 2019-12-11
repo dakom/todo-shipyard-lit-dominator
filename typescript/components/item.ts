@@ -117,6 +117,22 @@ class _Item extends LitElement {
             li.editing:last-child {
                 margin-bottom: -1px;
             }
+
+            button {
+                margin: 0;
+                padding: 0;
+                border: 0;
+                background: none;
+                font-size: 100%;
+                vertical-align: baseline;
+                font-family: inherit;
+                font-weight: inherit;
+                color: inherit;
+                -webkit-appearance: none;
+                appearance: none;
+                -webkit-font-smoothing: antialiased;
+                -moz-osx-font-smoothing: grayscale;
+            }
         `;
     }
 
@@ -125,7 +141,11 @@ class _Item extends LitElement {
     render() {
         return html`
             <li>
-                ${this.label}
+                <div class="view">
+                    <input class="toggle" type="checkbox" />
+                    <label>${this.label}</label>
+                    <button class="destroy"></button>
+                </div>
             </li>
         `;
     }
