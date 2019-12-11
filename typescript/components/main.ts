@@ -7,7 +7,28 @@ import {Item} from "@components/types/types";
 
 @customElement("todo-main")
 export class Items extends LitElement {
-    static get styles() {
+    static get styles() { return styles() }
+
+    @property( { type : Array }  ) items = [] as Array<Item>;
+
+    render() {
+        const {items} = this;
+        return html`
+            ${items.length === 0 
+                ? nothing
+                : html`
+                    <section class="main">
+                        <input id="toggle-all" class="toggle-all" type="checkbox">
+                        <label for="toggle-all">Mark all as complete</label>
+                        <todo-list .items=${items}></todo-list>
+                    </section>
+                `
+            }
+        `
+    }
+}
+
+function styles() {
         return css`
             .main {
                 position: relative;
@@ -49,23 +70,4 @@ export class Items extends LitElement {
 
         `;
     }
-
-    @property( { type : Array }  ) items = [] as Array<Item>;
-
-    render() {
-        const {items} = this;
-        return html`
-            ${items.length === 0 
-                ? nothing
-                : html`
-                    <section class="main">
-                        <input id="toggle-all" class="toggle-all" type="checkbox">
-                        <label for="toggle-all">Mark all as complete</label>
-                        <todo-list .items=${items}></todo-list>
-                    </section>
-                `
-            }
-        `
-    }
-}
 export default () => {}

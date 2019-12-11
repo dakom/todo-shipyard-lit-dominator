@@ -5,7 +5,34 @@ import { html } from "lit-html";
 
 @customElement("todo-footer")
 class Footer extends LitElement {
-    static get styles() {
+    static get styles() { return styles() }
+
+    @property( { type : Number}  ) count = 0; 
+
+    render() {
+        return this.count === 0
+            ? html`${nothing}`
+            : html`
+                <footer class="footer">
+                    <span class="todo-count"></span>
+                    <ul class="filters">
+                        <li>
+                            <a href="#/" class="selected">All</a>
+                        </li>
+                        <li>
+                            <a href="#/active">Active</a>
+                        </li>
+                        <li>
+                            <a href="#/completed">Completed</a>
+                        </li>
+                    </ul>
+                    <button class="clear-completed">Clear completed</button>
+                </footer>
+            `;
+    }
+}
+
+function styles() {
         return css`
             .footer {
                 padding: 10px 15px;
@@ -94,32 +121,6 @@ class Footer extends LitElement {
             }
 
         `;
-    }
-
-    @property( { type : Number}  ) count = 0; 
-
-    render() {
-        return this.count === 0
-            ? html`${nothing}`
-            : html`
-                <footer class="footer">
-                    <span class="todo-count"></span>
-                    <ul class="filters">
-                        <li>
-                            <a href="#/" class="selected">All</a>
-                        </li>
-                        <li>
-                            <a href="#/active">Active</a>
-                        </li>
-                        <li>
-                            <a href="#/completed">Completed</a>
-                        </li>
-                    </ul>
-                    <button class="clear-completed">Clear completed</button>
-                </footer>
-            `;
-    }
 }
-
 export default () => {
 }

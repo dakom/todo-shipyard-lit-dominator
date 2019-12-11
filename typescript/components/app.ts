@@ -6,7 +6,6 @@ import { html } from "lit-html";
 class App extends LitElement {
     static get styles() { return styles() }
 
-
     render() {
         return html`
             <section class="todoapp">

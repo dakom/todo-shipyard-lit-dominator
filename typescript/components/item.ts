@@ -7,7 +7,24 @@ import {Item} from "@components/types/types";
 
 @customElement("todo-item")
 class _Item extends LitElement {
-    static get styles() {
+    static get styles() { return styles() }
+
+    @property( { type : String }  ) label = "";
+
+    render() {
+        return html`
+            <li>
+                <div class="view">
+                    <input class="toggle" type="checkbox" />
+                    <label>${this.label}</label>
+                    <button class="destroy"></button>
+                </div>
+            </li>
+        `;
+    }
+}
+
+function styles() {
         return css`
 
             li {
@@ -135,20 +152,4 @@ class _Item extends LitElement {
             }
         `;
     }
-
-    @property( { type : String }  ) label = "";
-
-    render() {
-        return html`
-            <li>
-                <div class="view">
-                    <input class="toggle" type="checkbox" />
-                    <label>${this.label}</label>
-                    <button class="destroy"></button>
-                </div>
-            </li>
-        `;
-    }
-}
-
 export default () => {}

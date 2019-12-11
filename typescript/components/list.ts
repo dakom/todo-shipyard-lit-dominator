@@ -7,15 +7,7 @@ import {Item} from "@components/types/types";
 
 @customElement("todo-list")
 class List extends LitElement {
-    static get styles() {
-        return css`
-            .todo-list {
-                margin: 0;
-                padding: 0;
-                list-style: none;
-            }
-        `;
-    }
+    static get styles() { return styles() }
 
     @property( { type : Array }  ) items = [] as Array<Item>;
 
@@ -34,4 +26,13 @@ class List extends LitElement {
     }
 }
 
+function styles() {
+    return css`
+        .todo-list {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+    `;
+}
 export default () => {}

@@ -4,7 +4,6 @@ import Header from "@components/header";
 import Input from "@components/input";
 import List from "@components/list";
 import Main from "@components/main";
-import Items from "@components/items";
 import Item from "@components/item";
 
 export const register_web_components = () => {
@@ -14,6 +13,5 @@ export const register_web_components = () => {
     Input();
     List();
     Main();
-    Items();
     Item();
 }
