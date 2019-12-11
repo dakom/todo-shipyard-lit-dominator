@@ -122,5 +122,3 @@ function styles() {
 
         `;
 }
-export default () => {
-}

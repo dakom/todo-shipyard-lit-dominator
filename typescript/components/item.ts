@@ -152,4 +152,3 @@ function styles() {
             }
         `;
     }
-export default () => {}

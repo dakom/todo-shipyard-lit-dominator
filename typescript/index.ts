@@ -1,4 +1,4 @@
-import {register_web_components} from "./components";
+import "./components"
 import {register_event_sender} from "@events/events";
 import {render} from "lit-html";
 import {html} from "lit-element";
@@ -7,9 +7,6 @@ import "./index.css";
 
 
 (window as any).load_wasm((core:WasmCore) => {
-    //init web components
-    register_web_components();
-
     //init wasm
     const rust_app_ctx_ptr = core.init_app();
 

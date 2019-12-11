@@ -35,4 +35,3 @@ function styles() {
             }
         `
 }
-export default () => {}

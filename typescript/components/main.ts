@@ -70,4 +70,3 @@ function styles() {
 
         `;
     }
-export default () => {}
