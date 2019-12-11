@@ -26,13 +26,6 @@ pub fn convert_bridge_event(evt_type:u32, evt_data:JsValue) -> Result<Option<Eve
     }
 }
 
-cfg_if! {
-    if #[cfg(feature = "ts_test")] {
-        use strum_macros::{EnumIter, AsRefStr};
-        use strum::{IntoEnumIterator};
-    }
-}
-
 impl TryFrom<u32> for BridgeEvent {
     type Error = String;
 
@@ -43,6 +36,8 @@ impl TryFrom<u32> for BridgeEvent {
 
 cfg_if! {
     if #[cfg(feature = "ts_test")] {
+        use strum::{IntoEnumIterator};
+
         #[wasm_bindgen]
         pub fn get_bridge_event_pairs() -> Vec<JsValue> {
             BridgeEvent::iter()

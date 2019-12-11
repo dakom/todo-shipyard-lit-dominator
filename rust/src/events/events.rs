@@ -1,5 +1,8 @@
 use num_derive::FromPrimitive;    
 
+#[cfg(feature = "ts_test")]
+use strum_macros::{EnumIter, AsRefStr};
+
 //Events as sent from JS (straight enum)
 #[cfg_attr(feature = "ts_test", derive(EnumIter, AsRefStr))]
 #[derive(FromPrimitive, Copy, Clone, Debug)]
