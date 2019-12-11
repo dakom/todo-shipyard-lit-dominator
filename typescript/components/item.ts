@@ -10,6 +10,7 @@ class _Item extends LitElement {
     static get styles() { return styles() }
 
     @property( { type : String }  ) label = "";
+    @property( { type : Boolean }  ) completed = false; 
 
     render() {
         return html`

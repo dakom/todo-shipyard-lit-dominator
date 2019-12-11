@@ -27,7 +27,8 @@ web-sys = { version = "0.3.32", features = [
   'HtmlElement',
   'Node',
   'Window',
-  'ShadowRoot'
+  'ShadowRoot',
+  'Performance'
 ]}
 
 # Just for tests

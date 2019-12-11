@@ -1,17 +1,23 @@
 use shipyard::*;
 use crate::components::*;
 use crate::dom;
+use wasm_bindgen::prelude::*;
 
-
-#[system(ItemList)]
-pub fn run (item_lists:&crate::components::ItemList, items:&Item, dirties:&Dirty) {
+//TODO - use the filter to cull list
+#[system(RenderItemList)]
+pub fn run (item_lists:&ItemList, filters:&Filter, items:&Item, dirties:&Dirty) {
     if let Some((_item_list, _dirty)) = (item_lists, dirties).iter().next() {
-        let data:Vec<&str> = items.iter().map(|item| item.0.as_ref()).collect();
-        dom::todo::replace_items(&data).unwrap();
+        let items:Vec<&Item> = items.iter().collect();
+        let items_js = serde_wasm_bindgen::to_value(&items).unwrap();
+        dom::todo::replace_items(items_js).unwrap();
     }
 }
 
-#[system(ItemsUpdate)]
+#[system(RenderFilter)]
+pub fn run (_filters:&Filter, _dirties:&Dirty) {
+}
+
+#[system(RenderItemsUpdate)]
 pub fn run (_items:&Item, _dirty:&Dirty) {
     //let data:Vec<&str> = items.iter().map(|x| x.0.as_ref()).collect();
     /*
@@ -21,7 +27,7 @@ pub fn run (_items:&Item, _dirty:&Dirty) {
     */
 }
 
-#[system(ClearDirty)]
+#[system(RenderClearDirty)]
 pub fn run (mut dirties:&mut Dirty) {
     let entity_ids:Vec<Key> = 
         (&dirties)

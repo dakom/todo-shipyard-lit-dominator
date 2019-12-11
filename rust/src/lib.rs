@@ -9,7 +9,7 @@ use wasm_bindgen::prelude::*;
 use shipyard::*;
 use events::{convert_events::*, process_events::*};
 use components::*;
-use systems::*;
+use systems::render::*;
 use context::*;
 
 #[cfg(feature = "wee_alloc")]
@@ -50,10 +50,11 @@ fn init_world() -> (World, KeyCache) {
     let world = World::new::<(
         components::Item,
         components::ItemList,
-        components::Dirty
+        components::Dirty,
+        components::Filter
     )>();
 
-    world.add_workload("Render", (render::ItemList, render::ItemsUpdate, render::ClearDirty));
+    world.add_workload("Render", (RenderFilter, RenderItemList, RenderItemsUpdate, RenderClearDirty));
 
     let mut item_list_key:Option<Key> = None;
     world.run::<(EntitiesMut, &mut ItemList), _>(|(mut entities, mut item_lists)| {

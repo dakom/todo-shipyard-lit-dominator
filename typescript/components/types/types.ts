@@ -1,1 +1,4 @@
-export type Item = string;
+export interface Item {
+    label: string;
+    completed: boolean;
+}
