@@ -68,9 +68,9 @@ module.exports = {
         extensions: [".ts", ".js", ".css"],
         alias: {
             "@components": path.resolve(__dirname, "typescript/components"),
+            "@styles": path.resolve(__dirname, "typescript/components/styles"),
             "@utils": path.resolve(__dirname, "typescript/utils"),
             "@settings": path.resolve(__dirname, "typescript/settings"),
-            "@styles": path.resolve(__dirname, "typescript/styles"),
             "@events": path.resolve(__dirname, "typescript/events"),
         }
     }

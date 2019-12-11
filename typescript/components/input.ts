@@ -1,19 +1,48 @@
 import { BridgeEvent, send_event } from "@events/events";
 import { common_css } from "@styles/common";
-import { customElement, html, LitElement } from "lit-element";
+import { customElement, html, LitElement, css} from "lit-element";
 const ENTER_KEY = 13;
 
-@customElement("top-input")
-export class TopInput extends LitElement {
+@customElement("todo-input")
+class Input extends LitElement {
     static get styles() {
-        return common_css;
+        return [common_css, css`
+
+            input::-webkit-input-placeholder {
+                font-style: italic;
+                font-weight: 300;
+                color: rgba(0, 0, 0, 0.4);
+            }
+
+            input::-moz-placeholder {
+                font-style: italic;
+                font-weight: 300;
+                color: rgba(0, 0, 0, 0.4);
+            }
+
+            input::input-placeholder {
+                font-style: italic;
+                font-weight: 300;
+                color: rgba(0, 0, 0, 0.4);
+            }
+
+            input.new-todo {
+                padding: 16px 16px 16px 60px;
+                border: none;
+                background: rgba(0, 0, 0, 0.003);
+                box-shadow: inset 0 -2px 1px rgba(0,0,0,0.03);
+            }
+        `];
     }
 
     render() {
         const check_keypress = (evt:KeyboardEvent) => {
             if(evt.keyCode === ENTER_KEY) {
                 const input = evt.target as HTMLInputElement;
-                send_event([BridgeEvent.AddTodo, input.value]);
+                const value = input.value.trim();
+                if(value !== "") {
+                    send_event([BridgeEvent.AddTodo, value]);
+                }
                 input.value = "";
             }
         }

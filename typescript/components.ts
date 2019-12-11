@@ -1,9 +1,19 @@
-import MainPage from "@components/page";
+import App from "@components/app";
+import Footer from "@components/footer";
+import Header from "@components/header";
+import Input from "@components/input";
+import List from "@components/list";
+import Main from "@components/main";
 import Items from "@components/items";
-import TopInput from "@components/input";
+import Item from "@components/item";
 
 export const register_web_components = () => {
-    MainPage();
+    App();
+    Footer();
+    Header();
+    Input();
+    List();
+    Main();
     Items();
-    TopInput();
+    Item();
 }

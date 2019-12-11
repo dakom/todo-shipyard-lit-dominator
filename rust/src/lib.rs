@@ -36,8 +36,6 @@ cfg_if! {
 pub fn init_app() -> Result<AppContext, JsValue> {
 	setup();
 
-    dom::page::start_page()?;
-
     let (world, key_cache) = init_world();
     let event_queue:Vec<events::Event> = Vec::new();
 
@@ -65,9 +63,8 @@ fn init_world() -> (World, KeyCache) {
     (world, KeyCache { item_list: item_list_key.unwrap()})
 }
 
-//TODO - rust side could be called on_event_from_js then export as send_event_to_rust
-#[wasm_bindgen]
-pub fn send_event_to_rust(app_ctx:&mut AppContext, evt_type: u32, evt_data: JsValue) -> Result<(), JsValue> {
+#[wasm_bindgen(js_name = send_event_to_rust)]
+pub fn on_event_from_js(app_ctx:&mut AppContext, evt_type: u32, evt_data: JsValue) -> Result<(), JsValue> {
     let event_queue = &mut app_ctx.event_queue;
     let evt = convert_bridge_event(evt_type, evt_data)?;
     if let Some(evt) = evt {

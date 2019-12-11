@@ -22,9 +22,9 @@
                 "*"
               ],
             "@components/*": ["typescript/components/*"],
+            "@styles/*": ["typescript/components/styles/*"],
             "@utils/*": ["typescript/utils/*"],
             "@settings/*": ["typescript/settings/*"],
-            "@styles/*": ["typescript/styles/*"],
             "@events/*": ["typescript/events/*"],
         },
     },

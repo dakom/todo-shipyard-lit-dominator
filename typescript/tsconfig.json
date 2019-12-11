@@ -23,9 +23,9 @@
               ],
 
             "@components/*": ["./components/*"],
+            "@styles/*": ["./components/styles/*"],
             "@utils/*": ["./utils/*"],
             "@settings/*": ["./settings/*"],
-            "@styles/*": ["./styles/*"],
             "@events/*": ["./events/*"],
         },
     },
