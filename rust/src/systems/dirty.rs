@@ -1,4 +1,4 @@
-use shipyard::*;
+use shipyard::prelude::*;
 use crate::components::*;
 
 #[system(ClearDirty)]

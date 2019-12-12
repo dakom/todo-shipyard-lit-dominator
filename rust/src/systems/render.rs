@@ -1,4 +1,4 @@
-use shipyard::*;
+use shipyard::prelude::*;
 use crate::components::*;
 use crate::dom::{self, effects, effects::DomItem};
 

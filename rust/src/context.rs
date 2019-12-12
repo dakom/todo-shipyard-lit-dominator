@@ -1,4 +1,4 @@
-use shipyard::*;
+use shipyard::prelude::*;
 use crate::events::Event;
 use wasm_bindgen::prelude::*;
 
