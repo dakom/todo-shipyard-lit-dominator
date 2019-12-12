@@ -1,4 +1,6 @@
+import {Filter} from "@components/types/types";
 export enum BridgeEvent {
+    FilterChange,
     AddTodo,
     UpdateTodo,
     RemoveTodo,
@@ -12,12 +14,9 @@ export enum BridgeEvent {
     And type checked strictly at compile-time
 */
 
-export enum Page {
-    Init
-}
-
 type ValidEvent = 
-    [BridgeEvent.AddTodo, string]
+    [BridgeEvent.FilterChange, Filter]
+    | [BridgeEvent.AddTodo, string]
     | [BridgeEvent.RemoveTodo, number]
 
 //this is loosely defined because the types are converted on the rust side 

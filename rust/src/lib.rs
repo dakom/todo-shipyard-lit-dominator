@@ -7,9 +7,7 @@ mod systems;
 use cfg_if::cfg_if;
 use wasm_bindgen::prelude::*;
 use shipyard::*;
-use events::{convert_events::*, process_events::*};
 use components::*;
-use systems::render::*;
 use context::*;
 
 #[cfg(feature = "wee_alloc")]
@@ -47,27 +45,35 @@ pub fn init_app() -> Result<AppContext, JsValue> {
 }
 
 fn init_world() -> (World, KeyCache) {
-    let world = World::new::<(
-        components::Item,
+    let mut world = World::new::<(
+        components::ItemLabel,
+        components::ItemStatus,
         components::ItemList,
         components::Dirty,
         components::Filter
     )>();
 
-    world.add_workload("Render", (RenderFilter, RenderItemList, RenderItemsUpdate, RenderClearDirty));
+    systems::register_workloads(&mut world);
 
     let mut item_list_key:Option<Key> = None;
-    world.run::<(EntitiesMut, &mut ItemList), _>(|(mut entities, mut item_lists)| {
-        item_list_key = Some(entities.add_entity(&mut item_lists, ItemList {}));
+    world.run::<(EntitiesMut, &mut ItemList, &mut Dirty), _>(|(mut entities, mut item_lists, mut dirties)| {
+        item_list_key = Some(entities.add_entity((&mut item_lists, &mut dirties), (ItemList {}, Dirty {}) ));
+    });
+    let mut filter_key :Option<Key> = None;
+    world.run::<(EntitiesMut, &mut Filter, &mut Dirty), _>(|(mut entities, mut filters, mut dirties)| {
+        filter_key = Some(entities.add_entity((&mut filters, &mut dirties), (Filter::All, Dirty{}) ));
     });
 
-    (world, KeyCache { item_list: item_list_key.unwrap()})
+    (world, KeyCache { 
+        item_list: item_list_key.unwrap(),
+        filter: filter_key.unwrap()
+    })
 }
 
 #[wasm_bindgen(js_name = send_event_to_rust)]
 pub fn on_event_from_js(app_ctx:&mut AppContext, evt_type: u32, evt_data: JsValue) -> Result<(), JsValue> {
     let event_queue = &mut app_ctx.event_queue;
-    let evt = convert_bridge_event(evt_type, evt_data)?;
+    let evt = events::convert_bridge_event(evt_type, evt_data)?;
     if let Some(evt) = evt {
         event_queue.push(evt);
     }
@@ -76,8 +82,8 @@ pub fn on_event_from_js(app_ctx:&mut AppContext, evt_type: u32, evt_data: JsValu
 
 #[wasm_bindgen]
 pub fn on_tick(app_ctx: &mut AppContext, now: f64) -> Result<(), JsValue> {
-    process_events(app_ctx, now)?;
-    app_ctx.world.run_workload("Render");
+    events::process_events(app_ctx, now)?;
+    systems::run_all_workloads(&mut app_ctx.world);
 
     Ok(())
 }

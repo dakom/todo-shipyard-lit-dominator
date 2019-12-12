@@ -1,30 +1,28 @@
 import { common_css } from "@styles/common";
 import { customElement, LitElement, property, css} from "lit-element";
+import {classMap} from 'lit-html/directives/class-map';
 import {nothing} from "lit-html";
 import { html } from "lit-html";
+import {Filter} from "@components/types/types";
 
 @customElement("todo-footer")
 class Footer extends LitElement {
     static get styles() { return styles() }
 
-    @property( { type : Number}  ) count = 0; 
-
+    @property( { type : Number} ) count = 0; 
+    @property( { type : Number} ) filter = Filter.All 
     render() {
-        return this.count === 0
+        const {count, filter} = this;
+
+        return count === 0
             ? html`${nothing}`
             : html`
                 <footer class="footer">
-                    <span class="todo-count"></span>
+                    <span class="todo-count">${formatCount(count)}</span>
                     <ul class="filters">
-                        <li>
-                            <a href="#/" class="selected">All</a>
-                        </li>
-                        <li>
-                            <a href="#/active">Active</a>
-                        </li>
-                        <li>
-                            <a href="#/completed">Completed</a>
-                        </li>
+                        ${filterLine (Filter.All) (filter)}
+                        ${filterLine (Filter.Active) (filter)}
+                        ${filterLine (Filter.Completed) (filter)}
                     </ul>
                     <button class="clear-completed">Clear completed</button>
                 </footer>
@@ -32,8 +30,25 @@ class Footer extends LitElement {
     }
 }
 
+const filterLine = (filter:Filter) => (current:Filter) => {
+    const info = {
+        [Filter.All]: ["", "All"],
+        [Filter.Active]: ["active", "Active"],
+        [Filter.Completed]: ["completed", "Completed"],
+    };
+
+    const [href, label] = info[filter];
+
+    const classes = classMap({selected: filter === current});
+
+    return html`
+        <li><a href="#/${href}" class=${classes}>${label}</a></li>
+    `;
+}
+const formatCount = (count:number) => html`${count} item${count !== 1 ? 's' : ''} left`;
+
 function styles() {
-        return css`
+        return [common_css, css`
             .footer {
                 padding: 10px 15px;
                 height: 20px;
@@ -120,5 +135,5 @@ function styles() {
                 }
             }
 
-        `;
+        `];
 }

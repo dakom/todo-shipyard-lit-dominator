@@ -8,6 +8,7 @@ use strum_macros::{EnumIter, AsRefStr};
 #[derive(FromPrimitive, Copy, Clone, Debug)]
 #[repr(u32)]
 pub enum BridgeEvent {
+    FilterChange,
     AddTodo,
     UpdateTodo,
     RemoveTodo,

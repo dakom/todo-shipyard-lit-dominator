@@ -1,4 +1,5 @@
-import "./components"
+import "./components";
+import {start_router} from "./router";
 import {register_event_sender} from "@events/events";
 import {render} from "lit-html";
 import {html} from "lit-element";
@@ -25,4 +26,6 @@ import "./index.css";
     }
     requestAnimationFrame(on_tick);
 
+    //handle initial router and changes
+    start_router();
 });
