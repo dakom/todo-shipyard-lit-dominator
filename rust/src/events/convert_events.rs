@@ -23,6 +23,7 @@ pub fn convert_bridge_event(evt_type:u32, evt_data:JsValue) -> Result<Option<Eve
             Ok(None)
             //Err(JsValue::from_str("TODO: update todo!"))
         }
+        _ => unimplemented!()
     }
 }
 
