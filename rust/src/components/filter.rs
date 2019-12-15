@@ -1,3 +1,4 @@
+use num_derive::FromPrimitive;    
 use std::fmt;
 
 #[derive(Copy, Clone)]

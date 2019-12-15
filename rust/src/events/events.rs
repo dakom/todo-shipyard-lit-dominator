@@ -1,3 +1,4 @@
+use crate::components::Filter;
 use num_derive::FromPrimitive;    
 
 #[cfg(feature = "ts_test")]
@@ -16,7 +17,7 @@ pub enum BridgeEvent {
 
 //Events as we want to deal with them in Rust
 pub enum Event {
-    ChangePage(Page),
+    FilterChange(Filter),
     AddTodo(String),
     UpdateTodo(shipyard::Key, String),
     RemoveTodo(shipyard::Key)
