@@ -31,12 +31,13 @@
     },
     "include": [
         "./**/*.ts",
-        "../_static/**/*.ts"
+        "../_static/**/*.ts",
+        "./**/*.css",
     ],
     "exclude": [
         "node_modules",
         "dist",
         "build",
-        "coverage"
+        "coverage",
     ]
 }

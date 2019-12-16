@@ -3,6 +3,7 @@ mod components;
 mod context;
 mod dom;
 mod systems;
+mod world;
 
 use cfg_if::cfg_if;
 use wasm_bindgen::prelude::*;
@@ -34,7 +35,7 @@ cfg_if! {
 pub fn init_app() -> Result<AppContext, JsValue> {
 	setup();
 
-    let (world, key_cache) = init_world();
+    let (world, key_cache) = world::init_world();
     let event_queue:Vec<events::Event> = Vec::new();
 
     Ok(AppContext {
@@ -44,28 +45,6 @@ pub fn init_app() -> Result<AppContext, JsValue> {
     })
 }
 
-fn init_world() -> (World, KeyCache) {
-    let mut world = World::new::<(
-        components::ItemLabel,
-        components::ItemStatus,
-        components::ItemList,
-        components::DirtyTag,
-    )>();
-
-    world.register_unique(components::Filter::default());
-    world.register_unique(components::DirtyFilter::default());
-
-    systems::register_workloads(&mut world);
-
-    let mut item_list_key:Option<Key> = None;
-    world.run::<(EntitiesMut, &mut ItemList, &mut DirtyTag), _, _>(|(mut entities, mut item_lists, mut dirties)| {
-        item_list_key = Some(entities.add_entity((&mut item_lists, &mut dirties), (ItemList {}, DirtyTag {}) ));
-    });
-
-    (world, KeyCache { 
-        item_list: item_list_key.unwrap(),
-    })
-}
 
 #[wasm_bindgen(js_name = send_event_to_rust)]
 pub fn on_event_from_js(app_ctx:&mut AppContext, evt_type: u32, evt_data: JsValue) -> Result<(), JsValue> {

@@ -4,8 +4,6 @@ import {register_event_sender} from "@events/events";
 import {render} from "lit-html";
 import {html} from "lit-element";
 import {WasmCore} from "@utils/wasm-types";
-import "./index.css";
-
 
 (window as any).load_wasm((core:WasmCore) => {
     //init wasm

@@ -31,6 +31,10 @@ module.exports = {
     module: {
         rules: [
             {
+                test: /\.css$/i,
+                use: [ 'lit-css-loader'],
+            },
+            {
                 test: /.ts$/,
                 use: [
                     { loader: 'ts-loader', options: { transpileOnly: true } }
@@ -39,10 +43,6 @@ module.exports = {
                     path.resolve(__dirname, "typescript/tests/**/*"),
                 ]
 
-            },
-            {
-                test: /\.css$/i,
-                use: ['style-loader', 'css-loader'],
             },
         ]
     },

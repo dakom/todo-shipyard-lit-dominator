@@ -26,9 +26,11 @@ pub fn set_items(items:Vec<DomItem>) -> Result<(), JsValue> {
     Ok(())
 }
 
-pub fn set_count(total:usize, remaining:usize) -> Result<(), JsValue> {
+pub fn set_count(total:usize, completed:usize,  remaining:usize) -> Result<(), JsValue> {
     let footer_element = footer_element()?;
-    js_sys::Reflect::set(&footer_element, &JsValue::from_str("count"), &JsValue::from_f64(remaining as f64))?;
+    js_sys::Reflect::set(&footer_element, &JsValue::from_str("total"), &JsValue::from_f64(total as f64))?;
+    js_sys::Reflect::set(&footer_element, &JsValue::from_str("remaining"), &JsValue::from_f64(remaining as f64))?;
+    js_sys::Reflect::set(&footer_element, &JsValue::from_str("completed"), &JsValue::from_f64(completed as f64))?;
 
     Ok(())
 }

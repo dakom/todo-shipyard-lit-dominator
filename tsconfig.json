@@ -30,7 +30,8 @@
     },
     "include": [
         "./typescript/**/*.ts",
-        "./_static/**/*.ts"
+        "./_static/**/*.ts",
+        "./typescript/**/*.css",
     ],
     "exclude": [
         "node_modules",

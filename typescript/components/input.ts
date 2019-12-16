@@ -1,11 +1,12 @@
 import { BridgeEvent, send_event } from "@events/events";
-import { common_css } from "@styles/common";
+import common_css from "@styles/common.css";
+import input_css from "@styles/input.css";
 import { customElement, html, LitElement, css} from "lit-element";
 const ENTER_KEY = 13;
 
 @customElement("todo-input")
 class Input extends LitElement {
-    static get styles() { return styles() }
+    static styles = [common_css, input_css];
 
     render() {
         const check_keypress = (evt:KeyboardEvent) => {
@@ -22,34 +23,4 @@ class Input extends LitElement {
             <input id="input-text" class="new-todo" @keydown=${evt => check_keypress(evt)} placeholder="What needs to be done?" autofocus />
         `
     }
-}
-
-function styles() {
-        return [common_css, css`
-
-            input::-webkit-input-placeholder {
-                font-style: italic;
-                font-weight: 300;
-                color: rgba(0, 0, 0, 0.4);
-            }
-
-            input::-moz-placeholder {
-                font-style: italic;
-                font-weight: 300;
-                color: rgba(0, 0, 0, 0.4);
-            }
-
-            input::input-placeholder {
-                font-style: italic;
-                font-weight: 300;
-                color: rgba(0, 0, 0, 0.4);
-            }
-
-            input.new-todo {
-                padding: 16px 16px 16px 60px;
-                border: none;
-                background: rgba(0, 0, 0, 0.003);
-                box-shadow: inset 0 -2px 1px rgba(0,0,0,0.03);
-            }
-        `];
 }
