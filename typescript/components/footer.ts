@@ -18,8 +18,6 @@ class Footer extends LitElement {
     render() {
         const {total, remaining, completed, filter} = this;
 
-        console.log(total);
-
         return total === 0
             ? html`${nothing}`
             : html`
@@ -30,7 +28,7 @@ class Footer extends LitElement {
                         ${filterLine (Filter.Active) (filter)}
                         ${filterLine (Filter.Completed) (filter)}
                     </ul>
-                    <button class="clear-completed">Clear completed</button>
+                    ${completed ? html`<button class="clear-completed">Clear completed</button>` : nothing}
                 </footer>
             `;
     }
@@ -42,8 +40,6 @@ const filterLine = (filter:Filter) => (current:Filter) => {
         [Filter.Active]: ["active", "Active"],
         [Filter.Completed]: ["completed", "Completed"],
     }[filter];
-
-    console.log(label, filter === current);
 
     const classes = classMap({selected: filter === current});
 
