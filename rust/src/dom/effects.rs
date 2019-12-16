@@ -5,15 +5,17 @@ use crate::components::Filter;
 
 #[derive(Serialize)]
 pub struct DomItem <'a> {
+    id: String,
     label: &'a str,
     completed: bool
 }
 
-impl <'a> From<(&'a str, bool)> for DomItem<'a> {
-    fn from(tuple: (&'a str, bool)) -> Self {
+impl <'a> From<(String, &'a str, bool)> for DomItem<'a> {
+    fn from(tuple: (String, &'a str, bool)) -> Self {
         Self {
-            label: tuple.0,
-            completed: tuple.1
+            id: tuple.0,
+            label: tuple.1,
+            completed: tuple.2
         }
     }
 }

@@ -9,26 +9,32 @@ use crate::dom::{self, effects, effects::DomItem};
 pub fn run (item_lists:&ItemList, filter:Unique<&'a Filter>, item_labels:&ItemLabel, item_completes:&ItemComplete, dirty_tags:&DirtyTag, dirty_filter: Unique<&'a DirtyFilter>) {
     if (item_lists, &dirty_tags).iter().next().is_some() || dirty_filter.0 {
         let items:Vec<DomItem> = 
-            item_labels.iter().zip(item_completes.iter())
-                .map(|(label, complete)| (label.0.as_ref(), complete.0))
-                .filter(|(label, complete):&(&str, bool)| 
+
+            //TODO - use proper key id. See https://github.com/leudz/shipyard/issues/23
+            /*(item_labels, item_completes).iter().with_id()
+                .map(|(id, label, complete)| (format!("{}", id.0), label.0.as_ref(), complete.0))
+                */
+            (item_labels, item_completes).iter().enumerate()
+                .map(|(index, (label, complete))| (index.to_string(), label.0.as_ref(), complete.0))
+                .filter(|(_, _, complete):&(String, &str, bool)| 
                     match filter {
                         Filter::All => true,
                         Filter::Active => !*complete,
                         Filter::Completed => *complete
                     }
                 )
-                .map(|(label, complete)| (label.as_ref(), complete).into())
+                .map(|(id, label, complete)| (id, label, complete).into())
                 .collect();
 
         effects::set_items(items).unwrap();
     }
 }
 
-//runs only when item status changes
+//runs when item status changes or items are added/removed
 #[system(RenderCompleted)]
-pub fn run (item_completes:&ItemComplete, dirty_tags:&DirtyTag) {
-    if(&item_completes, &dirty_tags).iter().next().is_some() { 
+pub fn run (item_lists: &ItemList, item_completes:&ItemComplete, dirty_tags:&DirtyTag) {
+    if(item_lists, &dirty_tags).iter().next().is_some() 
+    || (&item_completes, &dirty_tags).iter().next().is_some() { 
         let total_len = (&item_completes).iter().count();
         let completed_len = (&item_completes).iter().filtered(|complete| complete.0).count();
         let remaining_len = total_len - completed_len;

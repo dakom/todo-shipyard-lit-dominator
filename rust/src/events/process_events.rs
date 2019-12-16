@@ -20,11 +20,35 @@ pub fn process_events(app_ctx:&mut AppContext, _now:f64) -> Result<(), JsValue> 
 
                 mark_item_list_dirty = true;
             },
+            //TODO - use proper key id. See https://github.com/leudz/shipyard/issues/23
+            /*
             Event::RemoveTodo(key) => {
                 world.run::<AllStorages, _, _>(|mut all_storages| {
                     all_storages.delete(*key);
                 });
                 mark_item_list_dirty = true;
+            },
+            */
+            Event::RemoveTodo(index) => {
+
+                let key = world.run::<&ItemLabel, _, _>(|item_labels| {
+                    let result = item_labels.iter().with_id().enumerate().find(|(item_index, _)| {
+                        item_index == index
+                    });
+
+                    if let Some((_, (key, _))) = result {
+                        Some(key)
+                    } else {
+                        None
+                    }
+                });
+
+                if let Some(key) = key {
+                    world.run::<AllStorages, _, _>(|mut all_storages| {
+                        all_storages.delete(key);
+                        mark_item_list_dirty = true;
+                    });
+                }
             },
             Event::FilterChange(_filter) => {
                 world.run::<(Unique<&mut Filter>, Unique<&mut DirtyFilter>), _, _>(|(mut filter, mut dirty_filter)| {

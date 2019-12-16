@@ -19,7 +19,7 @@ class List extends LitElement {
                 ${repeat(
                     items, 
                     item => item,
-                    item => html`<todo-item .label=${item.label} .completed=${item.completed} />`
+                    item => html`<todo-item .id=${item.id} .label=${item.label} .completed=${item.completed} />`
                 )}
             </ul>
         `;

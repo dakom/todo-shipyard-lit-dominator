@@ -28,8 +28,11 @@ impl TryFrom<u32> for BridgeEvent {
 pub enum Event {
     FilterChange(Filter),
     AddTodo(String),
-    UpdateTodo(shipyard::Key, String),
-    RemoveTodo(shipyard::Key)
+    //TODO - use proper key id. See https://github.com/leudz/shipyard/issues/23
+    //UpdateTodo(shipyard::Key, String),
+    //RemoveTodo(shipyard::Key)
+    UpdateTodo(usize, String),
+    RemoveTodo(usize)
 }
 
 impl TryFrom<u32> for Filter {

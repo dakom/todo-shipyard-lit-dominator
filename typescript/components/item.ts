@@ -11,6 +11,7 @@ class _Item extends LitElement {
     static styles = [common_css, item_css];
 
     @property( { type : String }  ) label = "";
+    @property( { type : String }  ) id = "";
     @property( { type : Boolean }  ) completed = false; 
 
     render() {
@@ -19,9 +20,13 @@ class _Item extends LitElement {
                 <div class="view">
                     <input class="toggle" type="checkbox" />
                     <label>${this.label}</label>
-                    <button class="destroy"></button>
+                    <button class="destroy" @click=${() => on_destroy(this.id)} ></button>
                 </div>
             </li>
         `;
     }
+}
+
+const on_destroy = (id:string) => {
+    send_event([BridgeEvent.RemoveTodo, id]);
 }

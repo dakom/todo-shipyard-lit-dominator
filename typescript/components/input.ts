@@ -9,18 +9,19 @@ class Input extends LitElement {
     static styles = [common_css, input_css];
 
     render() {
-        const check_keypress = (evt:KeyboardEvent) => {
-            if(evt.keyCode === ENTER_KEY) {
-                const input = evt.target as HTMLInputElement;
-                const value = input.value.trim();
-                if(value !== "") {
-                    send_event([BridgeEvent.AddTodo, value]);
-                }
-                input.value = "";
-            }
-        }
         return html`
-            <input id="input-text" class="new-todo" @keydown=${evt => check_keypress(evt)} placeholder="What needs to be done?" autofocus />
+            <input id="input-text" class="new-todo" @keydown=${check_keypress} placeholder="What needs to be done?" autofocus />
         `
+    }
+}
+
+const check_keypress = (evt:KeyboardEvent) => {
+    if(evt.keyCode === ENTER_KEY) {
+        const input = evt.target as HTMLInputElement;
+        const value = input.value.trim();
+        if(value !== "") {
+            send_event([BridgeEvent.AddTodo, value]);
+        }
+        input.value = "";
     }
 }
