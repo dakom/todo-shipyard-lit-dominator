@@ -12,18 +12,17 @@ class _Item extends LitElement {
     static styles = [common_css, item_css];
 
     @property( { type : String }  ) label = "";
-    @property( { type : String }  ) id = "";
+    @property( { type : String }  ) item_id = "";
     @property( { type : Boolean }  ) completed = false; 
 
     render() {
         console.log(this.completed);
-
         return html`
             <li class=${classMap({completed: this.completed})} >
                 <div class="view">
-                    <input class="toggle" type="checkbox" .checked=${this.completed} @change=${evt => on_complete_toggle (this.id) (evt.target.checked)}/>
+                    <input class="toggle" type="checkbox" .checked=${this.completed} @change=${evt => on_complete_toggle (this.item_id) (evt.target.checked)}/>
                     <label>${this.label}</label>
-                    <button class="destroy" @click=${() => on_destroy(this.id)} ></button>
+                    <button class="destroy" @click=${() => on_destroy(this.item_id)} ></button>
                 </div>
             </li>
         `;

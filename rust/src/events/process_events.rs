@@ -15,7 +15,7 @@ pub fn process_events(app_ctx:&mut AppContext, _now:f64) -> Result<(), JsValue> 
         match event {
             Event::AddTodo(label) => {
                 world.run::<(EntitiesMut, &mut ItemLabel, &mut ItemComplete, &mut DirtyTag), _, _>(|(mut entities, mut item_labels, mut item_completes, mut dirty_tags)| {
-                    entities.add_entity((&mut item_labels, &mut item_completes, &mut dirty_tags), (ItemLabel(label.to_string()), ItemComplete(false), DirtyTag{}));
+                    entities.add_entity((&mut item_labels, &mut item_completes), (ItemLabel(label.to_string()), ItemComplete(false)));
                 });
 
                 mark_item_list_dirty = true;
@@ -42,18 +42,13 @@ pub fn process_events(app_ctx:&mut AppContext, _now:f64) -> Result<(), JsValue> 
             //TODO - use proper key id. See https://github.com/leudz/shipyard/issues/23
             Event::SetTodoCompleted(index, completed) => {
                 let key = get_item_key_from_index(world, *index);
-
+                
                 if let Some(key) = key {
-                    world.run::<(EntitiesMut, &mut ItemList, &mut ItemComplete, &mut DirtyTag), _, _>(|(mut entities, mut item_lists, mut item_completes, mut dirty_tags)| {
-                        for item_complete in item_completes.iter() {
+                    //TODO - learn why ref mut is required here
+                    world.run::<&mut ItemComplete, _, _>(|ref mut item_completes| {
+                        if let Some(item_complete) = (item_completes).get(key).iter_mut().next() {
                             item_complete.0 = *completed;
                         }
-                        /*TODO - make it work!
-                        for item_complete in item_completes.get(key).iter() {
-                            let mut foo = *item_complete;
-                            (*foo).0 = false;
-                        }
-                        */
                     });
 
                     world.run::<(EntitiesMut, &mut DirtyTag), _, _>(|(ref mut entities, ref mut dirty_tags)| {

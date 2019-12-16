@@ -14,14 +14,21 @@ class List extends LitElement {
     render() {
         const {items} = this;
 
+        console.log(items);
+
         return html`
             <ul class="todo-list">
-                ${repeat(
-                    items, 
-                    item => item,
-                    item => html`<todo-item id=${item.id} .id=${item.id} .label=${item.label} .completed=${item.completed} />`
-                )}
+            ${items.map(item => 
+                html`<todo-item id=${item.id} .item_id=${item.id} .label=${item.label} .completed=${item.completed} />`
+            )}
             </ul>
         `;
     }
 }
+
+
+                // ${repeat(
+                //     items, 
+                //     item => item.id,
+                //     item => html`<todo-item id=${item.id} .id=${item.id} .label=${item.label} .completed=${item.completed} />`
+                // )}

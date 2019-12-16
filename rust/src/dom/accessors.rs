@@ -28,15 +28,8 @@ pub fn main_shadow_root() -> Result<web_sys::ShadowRoot, JsValue> {
 }
 
 pub fn item_element_by_id(id:&str) -> Result<web_sys::Element, JsValue> {
-
-    let main_shadow_root = main_shadow_root()?;
-    let list_element = main_shadow_root.get_element_by_id("list").ok_or(JsValue::from_str("couldn't get list element!!"))?;
-
-    main_element()
-    /*
     main_shadow_root()?
         .get_element_by_id("list").ok_or(JsValue::from_str("couldn't get list element!!"))?
         .shadow_root().ok_or(JsValue::from_str("couldn't get list shadow root!"))?
         .get_element_by_id(id).ok_or(JsValue::from_str("couldn't get list shadow root!"))
-        */
 }
