@@ -34,8 +34,8 @@ pub fn set_count(total:usize, remaining:usize) -> Result<(), JsValue> {
 }
 
 pub fn set_filter(filter:Filter) -> Result<(), JsValue> {
-    let filter_element = filter_element()?;
+    let footer_element = footer_element()?;
 
-    js_sys::Reflect::set(&filter_element, &JsValue::from_str("filter"), &JsValue::from_str(&filter.to_string()))?;
+    js_sys::Reflect::set(&footer_element, &JsValue::from_str("filter"), &JsValue::from_f64(filter as u32 as f64))?;
     Ok(())
 }

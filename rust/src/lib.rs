@@ -49,24 +49,21 @@ fn init_world() -> (World, KeyCache) {
         components::ItemLabel,
         components::ItemStatus,
         components::ItemList,
-        components::Dirty,
-        components::Filter
+        components::DirtyTag,
     )>();
+
+    world.register_unique(components::Filter::default());
+    world.register_unique(components::DirtyFilter::default());
 
     systems::register_workloads(&mut world);
 
     let mut item_list_key:Option<Key> = None;
-    world.run::<(EntitiesMut, &mut ItemList, &mut Dirty), _, _>(|(mut entities, mut item_lists, mut dirties)| {
-        item_list_key = Some(entities.add_entity((&mut item_lists, &mut dirties), (ItemList {}, Dirty {}) ));
-    });
-    let mut filter_key :Option<Key> = None;
-    world.run::<(EntitiesMut, &mut Filter, &mut Dirty), _, _>(|(mut entities, mut filters, mut dirties)| {
-        filter_key = Some(entities.add_entity((&mut filters, &mut dirties), (Filter::All, Dirty{}) ));
+    world.run::<(EntitiesMut, &mut ItemList, &mut DirtyTag), _, _>(|(mut entities, mut item_lists, mut dirties)| {
+        item_list_key = Some(entities.add_entity((&mut item_lists, &mut dirties), (ItemList {}, DirtyTag {}) ));
     });
 
     (world, KeyCache { 
         item_list: item_list_key.unwrap(),
-        filter: filter_key.unwrap()
     })
 }
 

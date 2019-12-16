@@ -1,20 +1,16 @@
 use num_derive::FromPrimitive;    
 use std::fmt;
 
-#[derive(Copy, Clone)]
+#[derive(FromPrimitive, Copy, Clone, Debug)]
+#[repr(u32)]
 pub enum Filter {
     All,
     Active,
     Completed
 }
 
-impl fmt::Display for Filter {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        let name = match self {
-            Self::All => "all",
-            Self::Active => "active",
-            Self::Completed => "completed"
-        };
-        write!(f, "{}", name)
+impl Default for Filter {
+    fn default() -> Self {
+        Filter::All
     }
 }

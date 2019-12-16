@@ -1,5 +1,6 @@
 use num_traits::FromPrimitive;
 use wasm_bindgen::prelude::*;
+use crate::components::Filter;
 use std::convert::{TryFrom, TryInto};
 use cfg_if::cfg_if;
 use super::events::*;
@@ -22,18 +23,16 @@ pub fn convert_bridge_event(evt_type:u32, evt_data:JsValue) -> Result<Option<Eve
         BridgeEvent::UpdateTodo => {
             Ok(None)
             //Err(JsValue::from_str("TODO: update todo!"))
-        }
+        },
+        BridgeEvent::FilterChange => {
+            let filter:f64 = evt_data.as_f64().ok_or(JsValue::from_str("invalid filter"))?;
+            let filter:Filter = (filter as u32).try_into()?;
+            Ok(Some(Event::FilterChange(filter)))
+        },
         _ => unimplemented!()
     }
 }
 
-impl TryFrom<u32> for BridgeEvent {
-    type Error = String;
-
-    fn try_from(value: u32) -> Result<Self, Self::Error> {
-        FromPrimitive::from_u32(value).ok_or_else(|| format!("BridgeEvent: {} is outside of range!", value))
-    }
-}
 
 cfg_if! {
     if #[cfg(feature = "ts_test")] {

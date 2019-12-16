@@ -14,8 +14,8 @@ pub fn process_events(app_ctx:&mut AppContext, _now:f64) -> Result<(), JsValue> 
     for event in event_queue.iter() {
         match event {
             Event::AddTodo(label) => {
-                world.run::<(EntitiesMut, &mut ItemLabel, &mut ItemStatus, &mut Dirty), _, _>(|(mut entities, mut item_labels, mut item_statuses, mut dirties)| {
-                    entities.add_entity((&mut item_labels, &mut item_statuses, &mut dirties), (ItemLabel(label.to_string()), ItemStatus { complete: false}, Dirty{}));
+                world.run::<(EntitiesMut, &mut ItemLabel, &mut ItemStatus, &mut DirtyTag), _, _>(|(mut entities, mut item_labels, mut item_statuses, mut dirty_tags)| {
+                    entities.add_entity((&mut item_labels, &mut item_statuses, &mut dirty_tags), (ItemLabel(label.to_string()), ItemStatus { complete: false}, DirtyTag{}));
                 });
 
                 mark_item_list_dirty = true;
@@ -25,6 +25,12 @@ pub fn process_events(app_ctx:&mut AppContext, _now:f64) -> Result<(), JsValue> 
                     all_storages.delete(*key);
                 });
                 mark_item_list_dirty = true;
+            },
+            Event::FilterChange(_filter) => {
+                world.run::<(Unique<&mut Filter>, Unique<&mut DirtyFilter>), _, _>(|(mut filter, mut dirty_filter)| {
+                    *filter = *_filter;
+                    dirty_filter.0 = true;
+                });
             },
             _ => {
                 log::info!("unhandled Event!")
@@ -37,8 +43,8 @@ pub fn process_events(app_ctx:&mut AppContext, _now:f64) -> Result<(), JsValue> 
 
     //Mark the item list dirty
     if mark_item_list_dirty {
-        world.run::<(EntitiesMut, &mut Dirty), _, _>(|(ref mut entities, ref mut dirties)| {
-            entities.add_component(dirties, Dirty{}, key_cache.item_list);
+        world.run::<(EntitiesMut, &mut DirtyTag), _, _>(|(ref mut entities, ref mut dirty_tags)| {
+            entities.add_component(dirty_tags, DirtyTag{}, key_cache.item_list);
         });
     }
     Ok(())

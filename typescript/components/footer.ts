@@ -31,13 +31,13 @@ class Footer extends LitElement {
 }
 
 const filterLine = (filter:Filter) => (current:Filter) => {
-    const info = {
+    const [href, label] = {
         [Filter.All]: ["", "All"],
         [Filter.Active]: ["active", "Active"],
         [Filter.Completed]: ["completed", "Completed"],
-    };
+    }[filter];
 
-    const [href, label] = info[filter];
+    console.log(label, filter === current);
 
     const classes = classMap({selected: filter === current});
 
