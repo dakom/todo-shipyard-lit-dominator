@@ -15,11 +15,11 @@ class List extends LitElement {
         const {items} = this;
 
         return html`
-            <ul class="todo-list" id="list">
+            <ul class="todo-list">
                 ${repeat(
                     items, 
                     item => item,
-                    item => html`<todo-item .id=${item.id} .label=${item.label} .completed=${item.completed} />`
+                    item => html`<todo-item id=${item.id} .id=${item.id} .label=${item.label} .completed=${item.completed} />`
                 )}
             </ul>
         `;

@@ -7,7 +7,8 @@ use crate::dom::{self, effects, effects::DomItem};
 // 2. filter changed
 #[system(RenderList)]
 pub fn run (item_lists:&ItemList, filter:Unique<&'a Filter>, item_labels:&ItemLabel, item_completes:&ItemComplete, dirty_tags:&DirtyTag, dirty_filter: Unique<&'a DirtyFilter>) {
-    if (item_lists, &dirty_tags).iter().next().is_some() || dirty_filter.0 {
+    //if (item_lists, &dirty_tags).iter().next().is_some() || dirty_filter.0 {
+    if dirty_tags.iter().next().is_some() || dirty_filter.0 {
         let items:Vec<DomItem> = 
 
             //TODO - use proper key id. See https://github.com/leudz/shipyard/issues/23
@@ -55,6 +56,13 @@ pub fn run (filter:Unique<&'a Filter>, dirty_filter:Unique<&'a DirtyFilter>) {
 //1. item text has changed
 //2. item status has changed 
 #[system(RenderContents)]
-pub fn run (_item_labels:&ItemLabel, _item_completes:&ItemComplete, _dirty:&DirtyTag) {
+pub fn run (item_labels:&ItemLabel, item_completes:&ItemComplete, dirty_tags:&DirtyTag) {
+    //TODO - use proper key id. See https://github.com/leudz/shipyard/issues/23
+    /*
+    for (index, (item_complete, _)) in (item_completes, dirty_tags).iter().enumerate() {
+        let id:String = index.to_string(); 
+        effects::set_completed(&id, item_complete.0).unwrap();
+    }
+    */
 }
 

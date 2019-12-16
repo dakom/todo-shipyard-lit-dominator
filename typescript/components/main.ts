@@ -20,7 +20,7 @@ export class Items extends LitElement {
                     <section class="main">
                         <input id="toggle-all" class="toggle-all" type="checkbox">
                         <label for="toggle-all">Mark all as complete</label>
-                        <todo-list .items=${items}></todo-list>
+                        <todo-list id="list" .items=${items}></todo-list>
                     </section>
                 `
             }

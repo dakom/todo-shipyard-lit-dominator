@@ -43,3 +43,11 @@ pub fn set_filter(filter:Filter) -> Result<(), JsValue> {
     js_sys::Reflect::set(&footer_element, &JsValue::from_str("filter"), &JsValue::from_f64(filter as u32 as f64))?;
     Ok(())
 }
+
+/*
+pub fn set_completed(id:&str, completed: bool) -> Result<(), JsValue> {
+    let item_element = item_element_by_id(id)?;
+    js_sys::Reflect::set(&item_element, &JsValue::from_str("completed"), &JsValue::from_bool(completed))?;
+    Ok(())
+}
+*/

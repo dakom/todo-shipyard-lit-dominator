@@ -12,7 +12,7 @@ use strum_macros::{EnumIter, AsRefStr};
 pub enum BridgeEvent {
     FilterChange,
     AddTodo,
-    UpdateTodo,
+    SetTodoCompleted,
     RemoveTodo,
 }
 
@@ -29,9 +29,9 @@ pub enum Event {
     FilterChange(Filter),
     AddTodo(String),
     //TODO - use proper key id. See https://github.com/leudz/shipyard/issues/23
-    //UpdateTodo(shipyard::Key, String),
+    //SetTodoCompleted(shipyard::Key, bool),
     //RemoveTodo(shipyard::Key)
-    UpdateTodo(usize, String),
+    SetTodoCompleted(usize, bool),
     RemoveTodo(usize)
 }
 

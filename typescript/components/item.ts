@@ -5,6 +5,7 @@ import common_css from "@styles/common.css";
 import item_css from "@styles/item.css";
 import {send_event, BridgeEvent} from "@events/events";
 import {Item} from "@components/types/types";
+import { classMap } from "lit-html/directives/class-map";
 
 @customElement("todo-item")
 class _Item extends LitElement {
@@ -15,10 +16,12 @@ class _Item extends LitElement {
     @property( { type : Boolean }  ) completed = false; 
 
     render() {
+        console.log(this.completed);
+
         return html`
-            <li>
+            <li class=${classMap({completed: this.completed})} >
                 <div class="view">
-                    <input class="toggle" type="checkbox" />
+                    <input class="toggle" type="checkbox" .checked=${this.completed} @change=${evt => on_complete_toggle (this.id) (evt.target.checked)}/>
                     <label>${this.label}</label>
                     <button class="destroy" @click=${() => on_destroy(this.id)} ></button>
                 </div>
@@ -27,6 +30,9 @@ class _Item extends LitElement {
     }
 }
 
+const on_complete_toggle = (id:string) => (completed:boolean) => {
+    send_event([BridgeEvent.SetTodoCompleted, [id, completed]]);
+}
 const on_destroy = (id:string) => {
     send_event([BridgeEvent.RemoveTodo, id]);
 }

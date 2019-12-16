@@ -2,7 +2,7 @@ import {Filter} from "@components/types/types";
 export enum BridgeEvent {
     FilterChange,
     AddTodo,
-    UpdateTodo,
+    SetTodoCompleted,
     RemoveTodo,
 }
 
@@ -18,6 +18,7 @@ type ValidEvent =
     [BridgeEvent.FilterChange, Filter]
     | [BridgeEvent.AddTodo, string]
     | [BridgeEvent.RemoveTodo, string]
+    | [BridgeEvent.SetTodoCompleted, [string, boolean]]
 
 //this is loosely defined because the types are converted on the rust side 
 type RustEventSender = (event_queue_ptr:number, evt_type:number, evt_data:any) => unknown;

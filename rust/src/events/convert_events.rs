@@ -22,8 +22,11 @@ pub fn convert_bridge_event(evt_type:u32, evt_data:JsValue) -> Result<Option<Eve
             let index:usize = index.parse().map_err(|_| JsValue::from_str("invalid id"))?;
             Ok(Some(Event::RemoveTodo(index as usize)))
         },
-        BridgeEvent::UpdateTodo => {
-            Ok(None)
+        BridgeEvent::SetTodoCompleted => {
+            //TODO - use proper key id. See https://github.com/leudz/shipyard/issues/23
+            let data:(String, bool) = serde_wasm_bindgen::from_value(evt_data)?;
+            let index:usize = data.0.parse().map_err(|_| JsValue::from_str("invalid id"))?;
+            Ok(Some(Event::SetTodoCompleted(index, data.1)))
             //Err(JsValue::from_str("TODO: update todo!"))
         },
         BridgeEvent::FilterChange => {

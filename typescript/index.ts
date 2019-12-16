@@ -26,4 +26,16 @@ import {WasmCore} from "@utils/wasm-types";
 
     //handle initial router and changes
     start_router();
+
+    /*
+    setTimeout(() => {
+        console.log(
+            document.getElementById("app")
+                .shadowRoot
+                .getElementById("main")
+                .shadowRoot
+                .getElementById("list")
+        );
+    }, 1000);
+    */
 });
