@@ -16,7 +16,6 @@ class _Item extends LitElement {
     @property( { type : Boolean }  ) completed = false; 
 
     render() {
-        console.log(this.completed);
         return html`
             <li class=${classMap({completed: this.completed})} >
                 <div class="view">

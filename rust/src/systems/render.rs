@@ -8,23 +8,17 @@ use crate::dom::{self, effects, effects::DomItem};
 #[system(RenderList)]
 pub fn run (item_lists:&ItemList, filter:Unique<&'a Filter>, item_labels:&ItemLabel, item_completes:&ItemComplete, dirty_tags:&DirtyTag, dirty_filter: Unique<&'a DirtyFilter>) {
     if (item_lists, &dirty_tags).iter().next().is_some() || dirty_filter.0 {
-    //if dirty_tags.iter().next().is_some() || dirty_filter.0 {
         let items:Vec<DomItem> = 
-
-            //TODO - use proper key id. See https://github.com/leudz/shipyard/issues/23
-            /*(item_labels, item_completes).iter().with_id()
-                .map(|(id, label, complete)| (format!("{}", id.0), label.0.as_ref(), complete.0))
-                */
-            (item_labels, item_completes).iter().enumerate()
-                .map(|(index, (label, complete))| (index.to_string(), label.0.as_ref(), complete.0))
-                .filter(|(_, _, complete):&(String, &str, bool)| 
+            (item_labels, item_completes).iter().with_id()
+                .map(|(entity, label, complete)| (entity, label.0.as_ref(), complete.0))
+                .filter(|(_, _, complete):&(Key, &str, bool)| 
                     match filter {
                         Filter::All => true,
                         Filter::Active => !*complete,
                         Filter::Completed => *complete
                     }
                 )
-                .map(|(id, label, complete)| (id, label, complete).into())
+                .map(|(key, label, complete)| (key, label, complete).into())
                 .collect();
 
         effects::set_items(items).unwrap();
@@ -57,10 +51,7 @@ pub fn run (filter:Unique<&'a Filter>, dirty_filter:Unique<&'a DirtyFilter>) {
 //2. item status has changed 
 #[system(RenderContents)]
 pub fn run (item_labels:&ItemLabel, item_completes:&ItemComplete, dirty_tags:&DirtyTag) {
-    //TODO - use proper key id. See https://github.com/leudz/shipyard/issues/23
-    for (index, (item_complete, _)) in (item_completes, dirty_tags).iter().enumerate() {
-        let id:String = index.to_string(); 
-        effects::set_completed(&id, item_complete.0).unwrap();
+    for (entity, label, complete, _) in (&item_labels, &item_completes, &dirty_tags).iter().with_id() {
+        effects::set_item(entity, &label.0, complete.0).unwrap();
     }
 }
-

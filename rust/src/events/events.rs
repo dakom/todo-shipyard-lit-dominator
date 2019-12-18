@@ -2,6 +2,7 @@ use crate::components::Filter;
 use num_derive::FromPrimitive;    
 use std::convert::TryFrom;
 use num_traits::FromPrimitive;
+use shipyard::prelude::*;
 #[cfg(feature = "ts_test")]
 use strum_macros::{EnumIter, AsRefStr};
 
@@ -28,11 +29,8 @@ impl TryFrom<u32> for BridgeEvent {
 pub enum Event {
     FilterChange(Filter),
     AddTodo(String),
-    //TODO - use proper key id. See https://github.com/leudz/shipyard/issues/23
-    //SetTodoCompleted(shipyard::Key, bool),
-    //RemoveTodo(shipyard::Key)
-    SetTodoCompleted(usize, bool),
-    RemoveTodo(usize)
+    SetTodoCompleted(Key, bool),
+    RemoveTodo(Key)
 }
 
 impl TryFrom<u32> for Filter {

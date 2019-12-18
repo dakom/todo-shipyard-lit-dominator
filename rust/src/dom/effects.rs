@@ -2,6 +2,7 @@ use wasm_bindgen::prelude::*;
 use super::accessors::*;
 use serde::{Serialize};
 use crate::components::Filter;
+use shipyard::Key;
 
 #[derive(Serialize)]
 pub struct DomItem <'a> {
@@ -10,16 +11,19 @@ pub struct DomItem <'a> {
     completed: bool
 }
 
-impl <'a> From<(String, &'a str, bool)> for DomItem<'a> {
-    fn from(tuple: (String, &'a str, bool)) -> Self {
+impl <'a> From<(Key, &'a str, bool)> for DomItem<'a> {
+    fn from(tuple: (Key, &'a str, bool)) -> Self {
         Self {
-            id: tuple.0,
+            id: entity_to_id_string(tuple.0),
             label: tuple.1,
             completed: tuple.2
         }
     }
 }
 
+fn entity_to_id_string(entity:Key) -> String {
+    serde_json::to_string(&entity).unwrap()
+}
 pub fn set_items(items:Vec<DomItem>) -> Result<(), JsValue> {
     let main_element = main_element()?;
     let items = serde_wasm_bindgen::to_value(&items).unwrap();
@@ -44,9 +48,11 @@ pub fn set_filter(filter:Filter) -> Result<(), JsValue> {
     Ok(())
 }
 
-pub fn set_completed(id:&str, completed: bool) -> Result<(), JsValue> {
-    let item_element = item_element_by_id(id)?;
+pub fn set_item(entity:Key, label:&str, completed: bool) -> Result<(), JsValue> {
+    let id = entity_to_id_string(entity);
+    let item_element = item_element_by_id(&id)?;
 
     js_sys::Reflect::set(&item_element, &JsValue::from_str("completed"), &JsValue::from_bool(completed))?;
+    js_sys::Reflect::set(&item_element, &JsValue::from_str("label"), &JsValue::from_str(label))?;
     Ok(())
 }

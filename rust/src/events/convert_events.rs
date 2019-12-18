@@ -1,5 +1,6 @@
 use num_traits::FromPrimitive;
 use wasm_bindgen::prelude::*;
+use shipyard::prelude::*;
 use crate::components::Filter;
 use std::convert::{TryFrom, TryInto};
 use cfg_if::cfg_if;
@@ -17,17 +18,14 @@ pub fn convert_bridge_event(evt_type:u32, evt_data:JsValue) -> Result<Option<Eve
             Ok(Some(Event::AddTodo(data)))
         },
         BridgeEvent::RemoveTodo => {
-            //TODO - use proper key id. See https://github.com/leudz/shipyard/issues/23
-            let index:String = evt_data.as_string().ok_or(JsValue::from_str("invalid id"))?;
-            let index:usize = index.parse().map_err(|_| JsValue::from_str("invalid id"))?;
-            Ok(Some(Event::RemoveTodo(index as usize)))
+            let data:String = serde_wasm_bindgen::from_value(evt_data)?;
+            let entity:Key = serde_json::from_str(&data).map_err(|_| JsValue::from_str("couldn't get key"))?;
+            Ok(Some(Event::RemoveTodo(entity)))
         },
         BridgeEvent::SetTodoCompleted => {
-            //TODO - use proper key id. See https://github.com/leudz/shipyard/issues/23
             let data:(String, bool) = serde_wasm_bindgen::from_value(evt_data)?;
-            let index:usize = data.0.parse().map_err(|_| JsValue::from_str("invalid id"))?;
-            Ok(Some(Event::SetTodoCompleted(index, data.1)))
-            //Err(JsValue::from_str("TODO: update todo!"))
+            let entity:Key = serde_json::from_str(&data.0).map_err(|_| JsValue::from_str("couldn't get key"))?;
+            Ok(Some(Event::SetTodoCompleted(entity, data.1)))
         },
         BridgeEvent::FilterChange => {
             let filter:f64 = evt_data.as_f64().ok_or(JsValue::from_str("invalid filter"))?;
@@ -37,7 +35,6 @@ pub fn convert_bridge_event(evt_type:u32, evt_data:JsValue) -> Result<Option<Eve
         _ => unimplemented!()
     }
 }
-
 
 cfg_if! {
     if #[cfg(feature = "ts_test")] {

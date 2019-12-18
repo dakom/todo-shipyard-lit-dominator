@@ -17,10 +17,9 @@ static ALLOC: wee_alloc::WeeAlloc = wee_alloc::WeeAlloc::INIT;
 
 // enable logging and panic hook only during debug builds
 cfg_if! {
-    if #[cfg(all(feature = "console_log", feature = "console_error_panic_hook", debug_assertions))] {
+    if #[cfg(all(feature = "wasm-logger", feature = "console_error_panic_hook", debug_assertions))] {
         fn setup() {
-            use console_log;
-            console_log::init_with_level(log::Level::Trace).expect("error initializing log");
+            wasm_logger::init(wasm_logger::Config::default());
             console_error_panic_hook::set_once();
             log::info!("rust logging enabled!");
         }
