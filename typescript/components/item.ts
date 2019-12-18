@@ -16,6 +16,7 @@ class _Item extends LitElement {
     @property( { type : Boolean }  ) completed = false; 
 
     render() {
+        console.log(this.item_id);
         return html`
             <li class=${classMap({completed: this.completed})} >
                 <div class="view">
@@ -29,6 +30,7 @@ class _Item extends LitElement {
 }
 
 const on_complete_toggle = (id:string) => (completed:boolean) => {
+    console.log("sending complete for", id);
     send_event([BridgeEvent.SetTodoCompleted, [id, completed]]);
 }
 const on_destroy = (id:string) => {
