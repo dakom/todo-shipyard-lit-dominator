@@ -15,7 +15,7 @@ pub fn process_events(app_ctx:&mut AppContext, _now:f64) -> Result<(), JsValue> 
         match event {
             Event::AddTodo(label) => {
                 world.run::<(EntitiesMut, &mut ItemLabel, &mut ItemComplete, &mut DirtyTag), _, _>(|(mut entities, mut item_labels, mut item_completes, mut dirty_tags)| {
-                    entities.add_entity((&mut item_labels, &mut item_completes), (ItemLabel(label.to_string()), ItemComplete(false)));
+                    let entity = entities.add_entity((&mut item_labels, &mut item_completes), (ItemLabel(label.to_string()), ItemComplete(false)));
                 });
 
                 mark_item_list_dirty = true;
