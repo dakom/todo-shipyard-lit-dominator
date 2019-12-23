@@ -56,7 +56,7 @@ pub fn run (item_labels:&ItemLabel, item_completes:&ItemComplete, dirty_tags:&Di
     }
 }
 
-//runs when item status has changed 
+//runs when item status has changed or there are 0 items
 #[system(RenderTopToggle)]
 pub fn run (item_completes:&ItemComplete, dirty_tags:&DirtyTag) {
     if (&item_completes, &dirty_tags).iter().count() > 0 { 
@@ -64,5 +64,7 @@ pub fn run (item_completes:&ItemComplete, dirty_tags:&DirtyTag) {
             complete.0
         });
         effects::set_top_toggle(all_completed).unwrap();
+    } else if (&item_completes).iter().count() == 0 {
+        effects::set_top_toggle(false).unwrap();
     }
 }

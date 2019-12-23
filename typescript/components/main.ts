@@ -15,14 +15,12 @@ export class Items extends LitElement {
     render() {
         const {items} = this;
 
-        console.log(this.all_completed);
-
         return html`
             ${items.length === 0 
                 ? nothing
                 : html`
                     <section class="main">
-                        <input id="toggle-all" class="toggle-all" type="checkbox" @change=${on_toggle_all} ?checked=${this.all_completed} />
+                        <input id="toggle-all" class="toggle-all" type="checkbox" @change=${on_toggle_all} .checked=${this.all_completed} />
                         <label for="toggle-all">Mark all as complete</label>
                         <todo-list id="list" .items=${items}></todo-list>
                     </section>
