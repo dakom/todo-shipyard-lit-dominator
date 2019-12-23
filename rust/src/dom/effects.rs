@@ -56,3 +56,10 @@ pub fn set_item(entity:Key, label:&str, completed: bool) -> Result<(), JsValue> 
     js_sys::Reflect::set(&item_element, &JsValue::from_str("label"), &JsValue::from_str(label))?;
     Ok(())
 }
+
+
+pub fn set_top_toggle(all_completed: bool) -> Result<(), JsValue> {
+    let main_element = main_element()?;
+    js_sys::Reflect::set(&main_element, &JsValue::from_str("all_completed"), &JsValue::from_bool(all_completed))?;
+    Ok(())
+}

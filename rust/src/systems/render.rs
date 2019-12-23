@@ -55,3 +55,14 @@ pub fn run (item_labels:&ItemLabel, item_completes:&ItemComplete, dirty_tags:&Di
         effects::set_item(entity, &label.0, complete.0).unwrap();
     }
 }
+
+//runs when item status has changed 
+#[system(RenderTopToggle)]
+pub fn run (item_completes:&ItemComplete, dirty_tags:&DirtyTag) {
+    if (&item_completes, &dirty_tags).iter().count() > 0 { 
+        let all_completed = (&item_completes).iter().all(|complete| {
+            complete.0
+        });
+        effects::set_top_toggle(all_completed).unwrap();
+    }
+}
