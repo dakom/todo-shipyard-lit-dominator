@@ -41,10 +41,10 @@ pub fn process_events(app_ctx:&mut AppContext, _now:f64) -> Result<(), JsValue> 
                 });
             },
             Event::SetCompletedAll(completed) => {
-                world.run::<(Entities, &mut ItemComplete, &mut DirtyTag), _, _>(|(entities, item_completes, ref mut dirty_tags)| {
+                world.run::<(Entities, &mut ItemComplete, &mut DirtyTag), _, _>(|(entities, item_completes, mut dirty_tags)| {
                     for (id, item_complete) in item_completes.iter().with_id() {
                         item_complete.0 = *completed;
-                        entities.add_component(dirty_tags, DirtyTag{}, id); 
+                        entities.add_component(&mut dirty_tags, DirtyTag{}, id); 
                     }
                 });
             },

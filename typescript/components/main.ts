@@ -18,7 +18,7 @@ export class Items extends LitElement {
                 ? nothing
                 : html`
                     <section class="main">
-                        <input id="toggle-all" class="toggle-all" type="checkbox">
+                        <input id="toggle-all" class="toggle-all" type="checkbox" @change=${on_toggle_all}>
                         <label for="toggle-all">Mark all as complete</label>
                         <todo-list id="list" .items=${items}></todo-list>
                     </section>
@@ -26,4 +26,8 @@ export class Items extends LitElement {
             }
         `
     }
+}
+
+const on_toggle_all = evt => {
+    send_event([BridgeEvent.SetCompletedAll, evt.target.checked]);
 }
