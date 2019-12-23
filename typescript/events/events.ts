@@ -41,6 +41,6 @@ export const register_event_sender = (_rust_app_ctx_ptr:number) => (_send_event_
     rust_app_ctx_ptr= _rust_app_ctx_ptr;
     send_event_to_rust = _send_event_to_rust;
 
-    send_event([BridgeEvent.AddTodo, "toggle check all when all items are selected"]);
+    send_event([BridgeEvent.AddTodo, "fix all completed display (bug in ts element)"]);
     send_event([BridgeEvent.AddTodo, "local storage"]);
 }
