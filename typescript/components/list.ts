@@ -14,8 +14,6 @@ class List extends LitElement {
     render() {
         const {items} = this;
 
-        console.log(items.map(({id}) => id));
-
         return html`
             <ul class="todo-list">
                 ${repeat(
