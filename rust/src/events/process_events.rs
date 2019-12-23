@@ -46,6 +46,9 @@ pub fn process_events(app_ctx:&mut AppContext, _now:f64) -> Result<(), JsValue> 
                     dirty_filter.0 = true;
                 });
             },
+            Event::ClearCompleted => {
+                log::info!("TODO: Clear Completed!")
+            },
             _ => {
                 log::info!("unhandled Event!")
             }

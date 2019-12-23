@@ -4,6 +4,7 @@ export enum BridgeEvent {
     AddTodo,
     SetTodoCompleted,
     RemoveTodo,
+    ClearCompleted
 }
 
 /*
@@ -19,6 +20,7 @@ type ValidEvent =
     | [BridgeEvent.AddTodo, string]
     | [BridgeEvent.RemoveTodo, string]
     | [BridgeEvent.SetTodoCompleted, [string, boolean]]
+    | BridgeEvent.ClearCompleted
 
 //this is loosely defined because the types are converted on the rust side 
 type RustEventSender = (event_queue_ptr:number, evt_type:number, evt_data:any) => unknown;
@@ -26,7 +28,11 @@ let rust_app_ctx_ptr:number;
 let send_event_to_rust:RustEventSender;
 
 export const send_event = (event:ValidEvent) => {
-    send_event_to_rust(rust_app_ctx_ptr, event[0], event[1]);
+    if(Array.isArray(event)) {
+        send_event_to_rust(rust_app_ctx_ptr, event[0], event[1]);
+    } else {
+        send_event_to_rust(rust_app_ctx_ptr, event, undefined);
+    }
 }
 
 export const register_event_sender = (_rust_app_ctx_ptr:number) => (_send_event_to_rust:RustEventSender) => {

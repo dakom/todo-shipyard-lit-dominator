@@ -15,6 +15,16 @@ pub enum BridgeEvent {
     AddTodo,
     SetTodoCompleted,
     RemoveTodo,
+    ClearCompleted
+}
+
+//Events as we want to deal with them in Rust
+pub enum Event {
+    FilterChange(Filter),
+    AddTodo(String),
+    SetTodoCompleted(Key, bool),
+    RemoveTodo(Key),
+    ClearCompleted,
 }
 
 impl TryFrom<u32> for BridgeEvent {
@@ -23,14 +33,6 @@ impl TryFrom<u32> for BridgeEvent {
     fn try_from(value: u32) -> Result<Self, Self::Error> {
         FromPrimitive::from_u32(value).ok_or_else(|| format!("BridgeEvent: {} is outside of range!", value))
     }
-}
-
-//Events as we want to deal with them in Rust
-pub enum Event {
-    FilterChange(Filter),
-    AddTodo(String),
-    SetTodoCompleted(Key, bool),
-    RemoveTodo(Key)
 }
 
 impl TryFrom<u32> for Filter {

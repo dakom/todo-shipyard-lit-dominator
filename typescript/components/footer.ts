@@ -1,5 +1,6 @@
 import common_css from "@styles/common.css";
 import footer_css from "@styles/footer.css";
+import { BridgeEvent, send_event } from "@events/events";
 import { customElement, LitElement, property, css} from "lit-element";
 import {classMap} from 'lit-html/directives/class-map';
 import {nothing} from "lit-html";
@@ -22,16 +23,20 @@ class Footer extends LitElement {
             ? html`${nothing}`
             : html`
                 <footer class="footer">
-                    <span class="todo-count">${formatRemaining(remaining)}</span>
+                    <span class="todo-count">${format_remaining(remaining)}</span>
                     <ul class="filters">
                         ${filterLine (Filter.All) (filter)}
                         ${filterLine (Filter.Active) (filter)}
                         ${filterLine (Filter.Completed) (filter)}
                     </ul>
-                    ${completed ? html`<button class="clear-completed">Clear completed</button>` : nothing}
+                    ${completed ? html`<button class="clear-completed" @click=${clear_completed}>Clear completed</button>` : nothing}
                 </footer>
             `;
     }
+}
+
+const clear_completed = () => {
+    send_event(BridgeEvent.ClearCompleted);
 }
 
 const filterLine = (filter:Filter) => (current:Filter) => {
@@ -47,4 +52,4 @@ const filterLine = (filter:Filter) => (current:Filter) => {
         <li><a href="#/${href}" class=${classes}>${label}</a></li>
     `;
 }
-const formatRemaining = (count:number) => html`${count} item${count !== 1 ? 's' : ''} left`;
+const format_remaining = (count:number) => html`${count} item${count !== 1 ? 's' : ''} left`;

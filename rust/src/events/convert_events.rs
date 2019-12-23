@@ -32,6 +32,9 @@ pub fn convert_bridge_event(evt_type:u32, evt_data:JsValue) -> Result<Option<Eve
             let filter:Filter = (filter as u32).try_into()?;
             Ok(Some(Event::FilterChange(filter)))
         },
+        BridgeEvent::ClearCompleted => {
+            Ok(Some(Event::ClearCompleted))
+        },
         _ => unimplemented!()
     }
 }
