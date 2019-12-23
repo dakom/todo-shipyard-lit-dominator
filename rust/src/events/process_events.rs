@@ -47,7 +47,20 @@ pub fn process_events(app_ctx:&mut AppContext, _now:f64) -> Result<(), JsValue> 
                 });
             },
             Event::ClearCompleted => {
-                log::info!("TODO: Clear Completed!")
+                let entity_ids:Vec<Key> = world.run::<(&ItemLabel, &ItemComplete), _, _>(|(labels, completes)| {
+                    (&labels, completes)
+                        .iter()
+                        .with_id()
+                        .filter(|(_, _, complete)| complete.0)
+                        .map(|(id, _, _)| id)
+                        .collect()
+                });
+                world.run::<AllStorages, _, _>(|mut all_storages| {
+                    for entity in entity_ids.iter() {
+                        all_storages.delete(*entity);
+                    }
+                });
+                mark_item_list_dirty = true;
             },
             _ => {
                 log::info!("unhandled Event!")
