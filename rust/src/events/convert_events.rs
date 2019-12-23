@@ -22,10 +22,14 @@ pub fn convert_bridge_event(evt_type:u32, evt_data:JsValue) -> Result<Option<Eve
             let entity:Key = serde_json::from_str(&data).map_err(|_| JsValue::from_str("couldn't get key"))?;
             Ok(Some(Event::RemoveTodo(entity)))
         },
-        BridgeEvent::SetTodoCompleted => {
+        BridgeEvent::SetCompleted => {
             let data:(String, bool) = serde_wasm_bindgen::from_value(evt_data)?;
             let entity:Key = serde_json::from_str(&data.0).map_err(|_| JsValue::from_str("couldn't get key"))?;
-            Ok(Some(Event::SetTodoCompleted(entity, data.1)))
+            Ok(Some(Event::SetCompleted(entity, data.1)))
+        },
+        BridgeEvent::SetCompletedAll => {
+            let data:bool = serde_wasm_bindgen::from_value(evt_data)?;
+            Ok(Some(Event::SetCompletedAll(data)))
         },
         BridgeEvent::FilterChange => {
             let filter:f64 = evt_data.as_f64().ok_or(JsValue::from_str("invalid filter"))?;

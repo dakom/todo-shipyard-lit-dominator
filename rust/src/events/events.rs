@@ -13,16 +13,18 @@ use strum_macros::{EnumIter, AsRefStr};
 pub enum BridgeEvent {
     FilterChange,
     AddTodo,
-    SetTodoCompleted,
+    SetCompleted,
     RemoveTodo,
-    ClearCompleted
+    ClearCompleted,
+    SetCompletedAll,
 }
 
 //Events as we want to deal with them in Rust
 pub enum Event {
     FilterChange(Filter),
     AddTodo(String),
-    SetTodoCompleted(Key, bool),
+    SetCompleted(Key, bool),
+    SetCompletedAll(bool),
     RemoveTodo(Key),
     ClearCompleted,
 }

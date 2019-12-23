@@ -27,7 +27,7 @@ pub fn process_events(app_ctx:&mut AppContext, _now:f64) -> Result<(), JsValue> 
                 });
             },
 
-            Event::SetTodoCompleted(key, completed) => {
+            Event::SetCompleted(key, completed) => {
                 //toggle completed
                 world.run::<&mut ItemComplete, _, _>(|ref mut item_completes| {
                     if let Some(item_complete) = (item_completes).get(*key).iter_mut().next() {
@@ -38,6 +38,14 @@ pub fn process_events(app_ctx:&mut AppContext, _now:f64) -> Result<(), JsValue> 
                 //add dirty tagged component
                 world.run::<(EntitiesMut, &mut DirtyTag), _, _>(|(ref mut entities, ref mut dirty_tags)| {
                     entities.add_component(dirty_tags, DirtyTag{}, *key); 
+                });
+            },
+            Event::SetCompletedAll(completed) => {
+                world.run::<(Entities, &mut ItemComplete, &mut DirtyTag), _, _>(|(entities, item_completes, ref mut dirty_tags)| {
+                    for (id, item_complete) in item_completes.iter().with_id() {
+                        item_complete.0 = *completed;
+                        entities.add_component(dirty_tags, DirtyTag{}, id); 
+                    }
                 });
             },
             Event::FilterChange(_filter) => {

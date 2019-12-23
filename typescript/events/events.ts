@@ -2,9 +2,10 @@ import {Filter} from "@components/types/types";
 export enum BridgeEvent {
     FilterChange,
     AddTodo,
-    SetTodoCompleted,
+    SetCompleted,
     RemoveTodo,
-    ClearCompleted
+    ClearCompleted,
+    SetCompletedAll,
 }
 
 /*
@@ -19,7 +20,8 @@ type ValidEvent =
     [BridgeEvent.FilterChange, Filter]
     | [BridgeEvent.AddTodo, string]
     | [BridgeEvent.RemoveTodo, string]
-    | [BridgeEvent.SetTodoCompleted, [string, boolean]]
+    | [BridgeEvent.SetCompleted, [string, boolean]]
+    | [BridgeEvent.SetCompletedAll, boolean]
     | BridgeEvent.ClearCompleted
 
 //this is loosely defined because the types are converted on the rust side 
@@ -39,7 +41,7 @@ export const register_event_sender = (_rust_app_ctx_ptr:number) => (_send_event_
     rust_app_ctx_ptr= _rust_app_ctx_ptr;
     send_event_to_rust = _send_event_to_rust;
 
-    send_event([BridgeEvent.AddTodo, "toggle check all when all items are selected"]);
     send_event([BridgeEvent.AddTodo, "(un)check all"]);
+    send_event([BridgeEvent.AddTodo, "toggle check all when all items are selected"]);
     send_event([BridgeEvent.AddTodo, "local storage"]);
 }

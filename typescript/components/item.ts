@@ -29,7 +29,7 @@ class _Item extends LitElement {
 }
 
 const on_complete_toggle = (id:string) => (completed:boolean) => {
-    send_event([BridgeEvent.SetTodoCompleted, [id, completed]]);
+    send_event([BridgeEvent.SetCompleted, [id, completed]]);
 }
 const on_destroy = (id:string) => {
     send_event([BridgeEvent.RemoveTodo, id]);
