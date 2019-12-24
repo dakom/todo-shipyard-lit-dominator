@@ -39,6 +39,9 @@ pub fn convert_bridge_event(evt_type:u32, evt_data:JsValue) -> Result<Option<Eve
         BridgeEvent::ClearCompleted => {
             Ok(Some(Event::ClearCompleted))
         },
+        BridgeEvent::InitialLoad => {
+            Ok(Some(Event::InitialLoad))
+        },
         _ => unimplemented!()
     }
 }

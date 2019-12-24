@@ -14,6 +14,7 @@ pub fn init_world() -> (World, KeyCache) {
 
     world.register_unique(components::Filter::default());
     world.register_unique(components::DirtyFilter::default());
+    world.register_unique(components::Phase::default());
 
     systems::register_workloads(&mut world);
 

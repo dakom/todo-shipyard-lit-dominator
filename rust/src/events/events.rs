@@ -11,6 +11,7 @@ use strum_macros::{EnumIter, AsRefStr};
 #[derive(FromPrimitive, Copy, Clone, Debug)]
 #[repr(u32)]
 pub enum BridgeEvent {
+    InitialLoad,
     FilterChange,
     AddTodo,
     SetCompleted,
@@ -21,6 +22,7 @@ pub enum BridgeEvent {
 
 //Events as we want to deal with them in Rust
 pub enum Event {
+    InitialLoad,
     FilterChange(Filter),
     AddTodo(String),
     SetCompleted(EntityId, bool),

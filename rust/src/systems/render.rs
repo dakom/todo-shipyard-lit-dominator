@@ -4,10 +4,13 @@ use crate::dom::{self, effects, effects::DomItem};
 
 //runs when: 
 // 1. list of items has changed via adding/removing
-// 2. filter changed
+// 2. item complete status changed
+// 3. filter changed
 #[system(RenderList)]
 pub fn run (item_lists:&ItemList, filter:Unique<&'a Filter>, item_labels:&ItemLabel, item_completes:&ItemComplete, dirty_tags:&DirtyTag, dirty_filter: Unique<&'a DirtyFilter>) {
-    if (item_lists, &dirty_tags).iter().next().is_some() || dirty_filter.0 {
+    if (&item_lists, &dirty_tags).iter().next().is_some() 
+        || (&item_completes, &dirty_tags).iter().next().is_some()
+        || dirty_filter.0 {
         let items:Vec<DomItem> = 
             (item_labels, item_completes).iter().with_id()
                 .map(|(entity, (label, complete))| (entity, (label.0.as_ref(), complete.0)))

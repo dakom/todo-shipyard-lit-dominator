@@ -3,6 +3,7 @@ use wasm_bindgen::prelude::*;
 use crate::components::*;
 use crate::events::*;
 use crate::context::AppContext;
+use crate::dom::storage;
 
 pub fn process_events(app_ctx:&mut AppContext, _now:f64) -> Result<(), JsValue> {
     let AppContext {event_queue, world, key_cache} = app_ctx;
@@ -69,6 +70,21 @@ pub fn process_events(app_ctx:&mut AppContext, _now:f64) -> Result<(), JsValue> 
                     });
                 });
                 mark_item_list_dirty = true;
+            },
+            Event::InitialLoad => {
+                if let Some((data, data_str)) = storage::load_stored_data()? {
+                    world.run::<(EntitiesMut, &mut ItemLabel, &mut ItemComplete, &mut DirtyTag), _, _>(|(mut entities, mut item_labels, mut item_completes, mut dirty_tags)| {
+                        data.items.iter().for_each(|(label, completed)| {
+                            entities.add_entity((&mut item_labels, &mut item_completes), (ItemLabel(label.to_string()), ItemComplete(*completed)));
+                        });
+                    });
+
+                    mark_item_list_dirty = true;
+
+                    log::info!("got data! {}", &data_str);
+                } else {
+                    log::info!("no saved data!");
+                }
             },
             _ => {
                 log::info!("unhandled Event!")

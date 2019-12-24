@@ -1,6 +1,6 @@
 import "./components";
 import {start_router} from "./router";
-import {register_event_sender} from "@events/events";
+import {BridgeEvent, send_event, register_event_sender} from "@events/events";
 import {render} from "lit-html";
 import {html} from "lit-element";
 import {WasmCore} from "@utils/wasm-types";
@@ -27,15 +27,7 @@ import {WasmCore} from "@utils/wasm-types";
     //handle initial router and changes
     start_router();
 
-    /*
-    setTimeout(() => {
-        console.log(
-            document.getElementById("app")
-                .shadowRoot
-                .getElementById("main")
-                .shadowRoot
-                .getElementById("list")
-        );
-    }, 1000);
-    */
+    //start initial load
+    send_event(BridgeEvent.InitialLoad);
+
 });

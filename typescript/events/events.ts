@@ -1,5 +1,6 @@
 import {Filter} from "@components/types/types";
 export enum BridgeEvent {
+    InitialLoad,
     FilterChange,
     AddTodo,
     SetCompleted,
@@ -17,7 +18,8 @@ export enum BridgeEvent {
 */
 
 type ValidEvent = 
-    [BridgeEvent.FilterChange, Filter]
+    BridgeEvent.InitialLoad
+    | [BridgeEvent.FilterChange, Filter]
     | [BridgeEvent.AddTodo, string]
     | [BridgeEvent.RemoveTodo, string]
     | [BridgeEvent.SetCompleted, [string, boolean]]
@@ -40,8 +42,4 @@ export const send_event = (event:ValidEvent) => {
 export const register_event_sender = (_rust_app_ctx_ptr:number) => (_send_event_to_rust:RustEventSender) => {
     rust_app_ctx_ptr= _rust_app_ctx_ptr;
     send_event_to_rust = _send_event_to_rust;
-
-    send_event([BridgeEvent.AddTodo, "local storage"]);
-    send_event([BridgeEvent.AddTodo, "edit text"]);
-    send_event([BridgeEvent.AddTodo, "filter when item changes"]);
 }
