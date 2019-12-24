@@ -23,9 +23,9 @@ pub enum BridgeEvent {
 pub enum Event {
     FilterChange(Filter),
     AddTodo(String),
-    SetCompleted(Key, bool),
+    SetCompleted(EntityId, bool),
     SetCompletedAll(bool),
-    RemoveTodo(Key),
+    RemoveTodo(EntityId),
     ClearCompleted,
 }
 
