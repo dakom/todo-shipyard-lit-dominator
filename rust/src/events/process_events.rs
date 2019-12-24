@@ -20,32 +20,32 @@ pub fn process_events(app_ctx:&mut AppContext, _now:f64) -> Result<(), JsValue> 
 
                 mark_item_list_dirty = true;
             },
-            Event::RemoveTodo(key) => {
+            Event::RemoveTodo(entity_id) => {
                 world.run::<AllStorages, _, _>(|mut all_storages| {
-                    all_storages.delete(*key);
+                    all_storages.delete(*entity_id);
                     mark_item_list_dirty = true;
                 });
             },
 
-            Event::SetCompleted(key, completed) => {
+            Event::SetCompleted(entity_id, completed) => {
                 //toggle completed
                 world.run::<&mut ItemComplete, _, _>(|ref mut item_completes| {
-                    if let Some(item_complete) = (item_completes).get(*key).iter_mut().next() {
+                    if let Some(item_complete) = (item_completes).get(*entity_id).iter_mut().next() {
                         item_complete.0 = *completed;
                     }
                 });
                 
                 //add dirty tagged component
                 world.run::<(EntitiesMut, &mut DirtyTag), _, _>(|(ref mut entities, ref mut dirty_tags)| {
-                    entities.add_component(dirty_tags, DirtyTag{}, *key); 
+                    entities.add_component(dirty_tags, DirtyTag{}, *entity_id); 
                 });
             },
             Event::SetCompletedAll(completed) => {
                 world.run::<(Entities, &mut ItemComplete, &mut DirtyTag), _, _>(|(entities, item_completes, mut dirty_tags)| {
-                    for (id, item_complete) in item_completes.iter().with_id() {
+                    item_completes.iter().with_id().for_each(|(id, item_complete)| {
                         item_complete.0 = *completed;
                         entities.add_component(&mut dirty_tags, DirtyTag{}, id); 
-                    }
+                    });
                 });
             },
             Event::FilterChange(_filter) => {
@@ -55,18 +55,18 @@ pub fn process_events(app_ctx:&mut AppContext, _now:f64) -> Result<(), JsValue> 
                 });
             },
             Event::ClearCompleted => {
-                let entity_ids:Vec<Key> = world.run::<(&ItemLabel, &ItemComplete), _, _>(|(labels, completes)| {
+                let entity_ids:Vec<EntityId> = world.run::<(&ItemLabel, &ItemComplete), _, _>(|(labels, completes)| {
                     (&labels, completes)
                         .iter()
                         .with_id()
-                        .filter(|(_, _, complete)| complete.0)
-                        .map(|(id, _, _)| id)
-                        .collect()
+                        .filter(|(_, (_, complete))| complete.0)
+                        .map(|(id, _)| id)
+                        .fold(Vec::new(), |mut vec, x| {vec.push(x); vec})
                 });
                 world.run::<AllStorages, _, _>(|mut all_storages| {
-                    for entity in entity_ids.iter() {
+                    entity_ids.iter().for_each(|entity| {
                         all_storages.delete(*entity);
-                    }
+                    });
                 });
                 mark_item_list_dirty = true;
             },

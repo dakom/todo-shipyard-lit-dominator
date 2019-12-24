@@ -19,12 +19,12 @@ pub fn convert_bridge_event(evt_type:u32, evt_data:JsValue) -> Result<Option<Eve
         },
         BridgeEvent::RemoveTodo => {
             let data:String = serde_wasm_bindgen::from_value(evt_data)?;
-            let entity:Key = serde_json::from_str(&data).map_err(|_| JsValue::from_str("couldn't get key"))?;
+            let entity:EntityId = serde_json::from_str(&data).map_err(|_| JsValue::from_str("couldn't get entity id"))?;
             Ok(Some(Event::RemoveTodo(entity)))
         },
         BridgeEvent::SetCompleted => {
             let data:(String, bool) = serde_wasm_bindgen::from_value(evt_data)?;
-            let entity:Key = serde_json::from_str(&data.0).map_err(|_| JsValue::from_str("couldn't get key"))?;
+            let entity:EntityId = serde_json::from_str(&data.0).map_err(|_| JsValue::from_str("couldn't get entity id"))?;
             Ok(Some(Event::SetCompleted(entity, data.1)))
         },
         BridgeEvent::SetCompletedAll => {

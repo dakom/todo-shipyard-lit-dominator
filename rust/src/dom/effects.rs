@@ -2,7 +2,7 @@ use wasm_bindgen::prelude::*;
 use super::accessors::*;
 use serde::{Serialize};
 use crate::components::Filter;
-use shipyard::Key;
+use shipyard::EntityId;
 
 #[derive(Serialize)]
 pub struct DomItem <'a> {
@@ -11,17 +11,17 @@ pub struct DomItem <'a> {
     completed: bool
 }
 
-impl <'a> From<(Key, &'a str, bool)> for DomItem<'a> {
-    fn from(tuple: (Key, &'a str, bool)) -> Self {
+impl <'a> From<(EntityId, (&'a str, bool))> for DomItem<'a> {
+    fn from(tuple: (EntityId, (&'a str, bool))) -> Self {
         Self {
             id: entity_to_id_string(tuple.0),
-            label: tuple.1,
-            completed: tuple.2
+            label: (tuple.1).0,
+            completed: (tuple.1).1
         }
     }
 }
 
-fn entity_to_id_string(entity:Key) -> String {
+fn entity_to_id_string(entity:EntityId) -> String {
     serde_json::to_string(&entity).unwrap()
 }
 pub fn set_items(items:Vec<DomItem>) -> Result<(), JsValue> {
@@ -48,7 +48,7 @@ pub fn set_filter(filter:Filter) -> Result<(), JsValue> {
     Ok(())
 }
 
-pub fn set_item(entity:Key, label:&str, completed: bool) -> Result<(), JsValue> {
+pub fn set_item(entity:EntityId, label:&str, completed: bool) -> Result<(), JsValue> {
     let id = entity_to_id_string(entity);
     let item_element = item_element_by_id(&id)?;
 

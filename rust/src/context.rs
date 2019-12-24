@@ -16,5 +16,5 @@ pub struct AppContext {
 }
 
 pub struct KeyCache {
-    pub item_list: Key,
+    pub item_list: EntityId,
 }

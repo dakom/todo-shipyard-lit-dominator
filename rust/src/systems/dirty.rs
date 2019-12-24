@@ -3,12 +3,12 @@ use crate::components::*;
 
 #[system(ClearDirty)]
 pub fn run (mut dirty_tags:&mut DirtyTag, mut dirty_filter: Unique<&'a mut DirtyFilter>) {
-    let entity_ids:Vec<Key> = 
+    let entity_ids:Vec<EntityId> = 
         (&dirty_tags)
             .iter()
             .with_id()
             .map(|(id, _)| id)
-            .collect();
+            .fold(Vec::new(), |mut vec, x| {vec.push(x); vec});
 
     for id in entity_ids {
         Remove::<(DirtyTag,)>::remove((&mut dirty_tags,), id);
