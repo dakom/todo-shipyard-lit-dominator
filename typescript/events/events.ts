@@ -42,4 +42,6 @@ export const register_event_sender = (_rust_app_ctx_ptr:number) => (_send_event_
     send_event_to_rust = _send_event_to_rust;
 
     send_event([BridgeEvent.AddTodo, "local storage"]);
+    send_event([BridgeEvent.AddTodo, "edit text"]);
+    send_event([BridgeEvent.AddTodo, "filter when item changes"]);
 }
