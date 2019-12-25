@@ -18,6 +18,7 @@ pub enum BridgeEvent {
     RemoveTodo,
     ClearCompleted,
     SetCompletedAll,
+    ChangeTodo,
 }
 
 //Events as we want to deal with them in Rust
@@ -29,6 +30,7 @@ pub enum Event {
     SetCompletedAll(bool),
     RemoveTodo(EntityId),
     ClearCompleted,
+    ChangeTodo(EntityId, String),
 }
 
 impl TryFrom<u32> for BridgeEvent {

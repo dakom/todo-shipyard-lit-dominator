@@ -9,3 +9,8 @@ export enum Filter {
     Active,
     Completed
 }
+
+export enum KEYS {
+    ENTER = 13,
+    ESC = 27,
+}

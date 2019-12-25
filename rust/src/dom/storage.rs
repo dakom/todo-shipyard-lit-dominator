@@ -36,7 +36,5 @@ pub fn save_stored_data(data:&StoredData) -> Result<(), JsValue> {
 
     let json_str = serde_json::to_string(&data).map_err(|_| JsValue::from_str("couldn't serialize storage"))?;
 
-    log::info!("saved {}", json_str);
-
     local_storage.set(STORAGE_NAME, &json_str)
 }

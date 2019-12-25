@@ -2,7 +2,7 @@ import { BridgeEvent, send_event } from "@events/events";
 import common_css from "@styles/common.css";
 import input_css from "@styles/input.css";
 import { customElement, html, LitElement, css} from "lit-element";
-const ENTER_KEY = 13;
+import {KEYS} from "@components/types/types";
 
 @customElement("todo-input")
 class Input extends LitElement {
@@ -16,7 +16,7 @@ class Input extends LitElement {
 }
 
 const check_keypress = (evt:KeyboardEvent) => {
-    if(evt.keyCode === ENTER_KEY) {
+    if(evt.keyCode === KEYS.ENTER) {
         const input = evt.target as HTMLInputElement;
         const value = input.value.trim();
         if(value !== "") {

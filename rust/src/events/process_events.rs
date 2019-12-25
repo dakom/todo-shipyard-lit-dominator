@@ -41,6 +41,19 @@ pub fn process_events(app_ctx:&mut AppContext, _now:f64) -> Result<(), JsValue> 
                     entities.add_component(dirty_tags, DirtyTag{}, *entity_id); 
                 });
             },
+            Event::ChangeTodo(entity_id, label) => {
+                //toggle completed
+                world.run::<&mut ItemLabel, _, _>(|ref mut item_labels| {
+                    if let Some(item_label) = (item_labels).get(*entity_id).iter_mut().next() {
+                        item_label.0 = label.clone();
+                    }
+                });
+                
+                //add dirty tagged component
+                world.run::<(EntitiesMut, &mut DirtyTag), _, _>(|(ref mut entities, ref mut dirty_tags)| {
+                    entities.add_component(dirty_tags, DirtyTag{}, *entity_id); 
+                });
+            },
             Event::SetCompletedAll(completed) => {
                 world.run::<(Entities, &mut ItemComplete, &mut DirtyTag), _, _>(|(entities, item_completes, mut dirty_tags)| {
                     item_completes.iter().with_id().for_each(|(id, item_complete)| {

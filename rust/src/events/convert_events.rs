@@ -39,6 +39,11 @@ pub fn convert_bridge_event(evt_type:u32, evt_data:JsValue) -> Result<Option<Eve
         BridgeEvent::ClearCompleted => {
             Ok(Some(Event::ClearCompleted))
         },
+        BridgeEvent::ChangeTodo=> {
+            let data:(String, String) = serde_wasm_bindgen::from_value(evt_data)?;
+            let entity:EntityId = serde_json::from_str(&data.0).map_err(|_| JsValue::from_str("couldn't get entity id"))?;
+            Ok(Some(Event::ChangeTodo(entity, data.1)))
+        },
         BridgeEvent::InitialLoad => {
             Ok(Some(Event::InitialLoad))
         },

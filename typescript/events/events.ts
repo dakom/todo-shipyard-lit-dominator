@@ -7,6 +7,7 @@ export enum BridgeEvent {
     RemoveTodo,
     ClearCompleted,
     SetCompletedAll,
+    ChangeTodo
 }
 
 /*
@@ -25,6 +26,7 @@ type ValidEvent =
     | [BridgeEvent.SetCompleted, [string, boolean]]
     | [BridgeEvent.SetCompletedAll, boolean]
     | BridgeEvent.ClearCompleted
+    | [BridgeEvent.ChangeTodo, [string, string]]
 
 //this is loosely defined because the types are converted on the rust side 
 type RustEventSender = (event_queue_ptr:number, evt_type:number, evt_data:any) => unknown;
