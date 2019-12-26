@@ -15,8 +15,9 @@ pub fn init_world() -> (World, KeyCache) {
     world.register_unique(components::Filter::default());
     world.register_unique(components::DirtyFilter::default());
     world.register_unique(components::Phase::default());
+    world.register_unique(components::EventQueue::default());
 
-    systems::register_workloads(&mut world);
+    systems::workloads::register_workloads(&mut world);
 
     let mut item_list_id:Option<EntityId> = None;
     world.run::<(EntitiesMut, &mut ItemList, &mut DirtyTag), _, _>(|(mut entities, mut item_lists, mut dirties)| {

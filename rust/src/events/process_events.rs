@@ -5,8 +5,9 @@ use crate::events::*;
 use crate::context::AppContext;
 use crate::dom::storage;
 
+//TODO - move these over to systems in systems/events
 pub fn process_events(app_ctx:&mut AppContext, _now:f64) -> Result<(), JsValue> {
-    let AppContext {event_queue, world, key_cache} = app_ctx;
+    let AppContext {world, key_cache} = app_ctx;
 
     //if the list as a whole needs to be entirely re-rendered
     let mut mark_item_list_dirty = false;

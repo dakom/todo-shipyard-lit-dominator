@@ -1,5 +1,6 @@
 use num_derive::FromPrimitive;    
-use std::fmt;
+use std::collections::VecDeque;
+use crate::events::Event;
 
 pub struct ItemLabel (pub String);
 pub struct ItemComplete(pub bool); 
@@ -38,5 +39,12 @@ pub enum Phase {
 impl Default for Phase {
     fn default() -> Self {
         Phase::InitialLoad 
+    }
+}
+
+pub struct EventQueue(pub VecDeque<Event>);
+impl Default for EventQueue {
+    fn default() -> Self {
+        Self (VecDeque::new())
     }
 }
