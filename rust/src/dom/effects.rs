@@ -1,3 +1,14 @@
+use futures_signals::signal::{Mutable, SignalExt};
+use dominator::{Dom, class, html, clone, events};
+
+pub fn start_dom() {
+    dominator::append_dom(&dominator::body(), get_dom_tree());
+}
+
+fn get_dom_tree() -> Dom {
+    html!("todo-app")
+}
+/*
 use wasm_bindgen::prelude::*;
 use super::accessors::*;
 use serde::{Serialize};
@@ -63,3 +74,4 @@ pub fn set_top_toggle(all_completed: bool) -> Result<(), JsValue> {
     js_sys::Reflect::set(&main_element, &JsValue::from_str("all_completed"), &JsValue::from_bool(all_completed))?;
     Ok(())
 }
+*/

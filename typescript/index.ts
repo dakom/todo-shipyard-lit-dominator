@@ -13,9 +13,11 @@ import {WasmCore} from "@utils/wasm-types";
     register_event_sender(rust_app_ctx_ptr) (core.send_event_to_rust);
 
     //mount the app 
+    /*
     const element = document.createElement("todo-app");
     element.id = "app";
     document.body.appendChild(element);
+    */
 
     //kick off the loop where all the magic happens
     const on_tick = (now:DOMHighResTimeStamp) => {

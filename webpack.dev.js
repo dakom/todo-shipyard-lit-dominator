@@ -7,6 +7,7 @@ const ScriptExtHtmlWebpackPlugin = require('script-ext-html-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
+    mode: "none", //maybe a tiny speedup - but use DefinePlugin manually
     context: process.cwd(), // to automatically find tsconfig.json
     entry: "./typescript/index.ts",
     output: {
@@ -15,6 +16,9 @@ module.exports = {
         publicPath: "/"
     },
     plugins: [
+        new webpack.DefinePlugin({
+            'process.env.NODE_ENV': JSON.stringify("development")
+        }),
         new ForkTsCheckerWebpackPlugin({
             eslint: false
         }),

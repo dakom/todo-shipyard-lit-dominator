@@ -1,8 +1,7 @@
-use num_traits::FromPrimitive;
 use wasm_bindgen::prelude::*;
 use shipyard::prelude::*;
 use crate::components::Filter;
-use std::convert::{TryFrom, TryInto};
+use std::convert::{TryInto};
 use cfg_if::cfg_if;
 use super::events::*;
 

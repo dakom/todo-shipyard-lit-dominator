@@ -3,7 +3,9 @@ use crate::components::*;
 use crate::dom::storage::*;
 
 #[system(Save)]
-pub fn run (phase:Unique<&'a mut Phase>, item_lists:&ItemList, item_labels:&ItemLabel, item_completes:&ItemComplete, dirty_tags:&DirtyTag) {
+pub fn run (phase:Unique<&'a mut Phase>, item_labels:&ItemLabel, item_completes:&ItemComplete) {
+    //TODO
+    /*
     // phase is gated so that we don't save the initial empty data 
     if *phase == Phase::Ready {
         if (&item_lists, &dirty_tags).iter().next().is_some() 
@@ -21,4 +23,5 @@ pub fn run (phase:Unique<&'a mut Phase>, item_lists:&ItemList, item_labels:&Item
     } else {
         *phase = Phase::Ready;
     }
+    */
 }

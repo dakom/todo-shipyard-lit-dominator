@@ -55,12 +55,12 @@ jobs:
       run: rustup target add wasm32-unknown-unknown
     - name: install wasm-bindgen
       run: cargo install wasm-bindgen-cli
+    - name: install cargo make 
+      run: cargo install cargo-make 
     - name: test everything
       run: npm test
-    - name: bundle
-      run: npm run bundle
-    - name: copy static
-      run: cp -R ./_static/* ./dist/
+    - name: build for release 
+      run: cargo make build --profile production 
     - name: upload artifacts
       uses: actions/upload-artifact@master
       with:

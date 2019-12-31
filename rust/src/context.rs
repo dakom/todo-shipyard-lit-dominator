@@ -1,16 +1,12 @@
 use shipyard::prelude::*;
 use crate::events::Event;
 use wasm_bindgen::prelude::*;
+use std::collections::VecDeque;
 
 #[wasm_bindgen]
 pub struct AppContext {
     #[wasm_bindgen(skip)]
     pub world: World,
-
     #[wasm_bindgen(skip)]
-    pub key_cache: KeyCache
-}
-
-pub struct KeyCache {
-    pub item_list: EntityId,
+    pub event_queue: VecDeque<Event>,
 }
