@@ -12,10 +12,9 @@
 
 The task runner uses [cargo-make](https://github.com/sagiegurari/cargo-make)
 
-1. cargo install cargo-make
-2. npm install
-3. run any of the cargo-make commands:
-  * cargo make serve 
-  * cargo make test 
-  * cargo make build --profile production
-  * cargo make build --profile development
+After installing that (and other dependencies for the project itself - e.g. npm install, rust nightly, etc.), these commands are available:
+
+* `cargo make serve` (opens a browser and rebuilds/reloads on file change)
+* `cargo make test` (runs all the tests)
+* `cargo make build --profile production` (used in ci/cd - but can check out release builds in `dist/` this way)
+* `cargo make build --profile development` (same but used for seeing how non-optmized builds look)

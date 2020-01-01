@@ -12,10 +12,9 @@ run_task = [
 ]
 
 [tasks.serve]
-dependencies = ["build-development"]
 run_task = [{name = [
-    "webpack-development-server",
-    "rust-development-watcher"
+    "watch-rust",
+    "serve-webpack",
 ], parallel = true}]
 
 [tasks.test]
@@ -24,73 +23,71 @@ run_task = [{name = [
     "test-interop",
 ]}]
 
+[tasks.clean]
+run_task = [{name = [
+    "clean-rust",
+    "clean-artifacts",
+]}]
 
-#################
-## Development ##
-#################
+########################
+## Development Builds ##
+########################
 
 [tasks.build-development]
 run_task = [{name = [
-    "compile-development", 
-    "bindgen-development"
+    "clean",
+    "build-development-rust", 
+    "build-development-webpack", 
+    "copy-static"
 ]}]
 
-[tasks.compile-development]
+[tasks.build-development-rust]
 command = "cargo"
-args = ["build","--features","dev","--target","wasm32-unknown-unknown"]
-toolchain = "nightly"
+args = ["make", "build", "--profile", "development"]
 cwd = "rust"
 
-[tasks.bindgen-development]
-command = "wasm-bindgen"
-args = ["./target/wasm32-unknown-unknown/debug/my_core.wasm","--debug", "--keep-debug", "--target","web","--out-dir","../_static/wasm/core/pkg"]
+[tasks.build-development-webpack]
+script = ["npx webpack --progress --color --config webpack.dev.js"]
+
+##########################
+## Watchers and Servers ##
+##########################
+
+[tasks.watch-rust]
+command = "cargo"
+args = ["make", "watch"]
 cwd = "rust"
 
 ##See: https://github.com/sagiegurari/cargo-make/issues/355
-[tasks.webpack-development-server]
+[tasks.serve-webpack]
 script = ["npx webpack-dev-server --config webpack.dev.js"]
 
-#TODO - change to native watching (and just execute local task)
-#depends on https://github.com/sagiegurari/cargo-make/issues/195
-#also see https://github.com/sagiegurari/cargo-make/issues/350
-[tasks.rust-development-watcher]
-command = "watchexec"
-args = ["-w", "./rust/src", "makers", "build-development"]
-
-################
-## Production ##
-################
+#######################
+## Production Builds ##
+#######################
 
 [tasks.build-production]
 run_task = [{name = [
     "clean",
-    "compile-production", 
-    "bindgen-production",
-    "wasmopt-production",
-    "webpack-production",
-    "copy-production"
+    "build-production-rust", 
+    "build-production-webpack",
+    "copy-static"
 ]}]
 
-[tasks.compile-production]
+[tasks.build-production-rust]
 command = "cargo"
-args = ["build","--release","--target","wasm32-unknown-unknown"]
-toolchain = "nightly"
+args = ["make", "build", "--profile", "production"]
 cwd = "rust"
 
-[tasks.bindgen-production]
-command = "wasm-bindgen"
-args = ["./target/wasm32-unknown-unknown/release/my_core.wasm", "--target","web","--out-dir","../_static/wasm/core/pkg"]
-cwd = "rust"
 
-[tasks.wasmopt-production]
-command = "wasm-opt"
-# if CI fails, try with BINARYEN_CORES=1 in an env
-args = ["-O3","-o","./_static/wasm/core/pkg/my_core_bg.wasm", "./_static/wasm/core/pkg/my_core_bg.wasm"]
-
-[tasks.webpack-production]
+[tasks.build-production-webpack]
 script = ["npx webpack --progress --color --config webpack.release.js"]
 
-[tasks.copy-production]
+##################
+## Copy Static ##
+#################
+
+[tasks.copy-static]
 script_runner = "@shell"
 script = ["cp -R ./_static/* ./dist/"]
 
@@ -100,41 +97,31 @@ script = ["cp -R ./_static/* ./dist/"]
 
 [tasks.test-rust-unit]
 command = "cargo"
-args = ["test"]
-toolchain = "nightly"
-cwd = "rust"
-
-[tasks.build-test]
-run_task = [{name = [
-    "compile-test", 
-    "bindgen-test",
-]}]
-
-[tasks.compile-test]
-command = "cargo"
-args = ["build","--features","ts_test","--target","wasm32-unknown-unknown"]
-toolchain = "nightly"
-cwd = "rust"
-
-[tasks.bindgen-test]
-command = "wasm-bindgen"
-args = ["./target/wasm32-unknown-unknown/debug/my_core.wasm", "--target", "nodejs", "--out-dir", "../_static/wasm/core/pkg"]
+args = ["make", "test-unit"]
 cwd = "rust"
 
 [tasks.test-interop]
-dependencies = ["build-test"]
+dependencies = ["build-rust-test-interop"]
 script = ["npx jest"]
+
+[tasks.build-rust-test-interop]
+command = "cargo"
+args = ["make", "build-test-interop"]
+cwd = "rust"
 
 ############### 
 #### Cleanup ##
 ###############
 
-[tasks.clean]
+[tasks.clean-rust]
+command = "cargo"
+args = ["make", "clean"]
+cwd = "rust"
+
+[tasks.clean-artifacts]
 script_runner = "@shell"
 ignore_errors = true
 script = [ 
     "rm -rf ./dist",
     "rm -rf ./_static/wasm/core/pkg",
-    "rm -rf ./rust/target",
-    "rm -rf ./rust/pkg"
 ]

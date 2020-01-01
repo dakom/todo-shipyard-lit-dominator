@@ -24,7 +24,7 @@ cfg_if! {
         fn setup() {
             wasm_logger::init(wasm_logger::Config::default());
             console_error_panic_hook::set_once();
-            log::info!("rust logging enabled!");
+            log::info!("rust logging enabled!!!");
         }
     } else {
         fn setup() {
