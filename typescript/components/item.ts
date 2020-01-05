@@ -3,7 +3,6 @@ import {nothing, html} from "lit-html";
 import {repeat} from 'lit-html/directives/repeat';
 import common_css from "@styles/common.css";
 import item_css from "@styles/item.css";
-import {send_event, BridgeEvent} from "@events/events";
 import { classMap } from "lit-html/directives/class-map";
 import {KEYS} from "@components/types/types";
 
@@ -72,7 +71,7 @@ const check_edit_keypress = (id:string) => (evt:KeyboardEvent):boolean => {
         const input = evt.target as HTMLInputElement;
         const value = input.value.trim();
         if(value !== "") {
-            send_event([BridgeEvent.ChangeTodo, [id, value]]);
+            //send_event([BridgeEvent.ChangeTodo, [id, value]]);
         }
         input.value = "";
     }
@@ -80,9 +79,9 @@ const check_edit_keypress = (id:string) => (evt:KeyboardEvent):boolean => {
 
 }
 const on_complete_toggle = (id:string) => (completed:boolean) => {
-    send_event([BridgeEvent.SetCompleted, [id, completed]]);
+    //send_event([BridgeEvent.SetCompleted, [id, completed]]);
 }
 
 const on_destroy = (id:string) => {
-    send_event([BridgeEvent.RemoveTodo, id]);
+    //send_event([BridgeEvent.RemoveTodo, id]);
 }

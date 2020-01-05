@@ -12,10 +12,10 @@ run_task = [
 ]
 
 [tasks.watch]
-run_task = "build-development"
-watch = true 
-# command = "watchexec"
-# args = ["-w", "./src", "makers", "build-development"]
+command = "watchexec"
+args = ["-w", "./src", "-w", "../../rust-dominator/src", "makers", "build-development"]
+# run_task = "build-development"
+# watch = true 
 
 [tasks.test-unit]
 command = "cargo"

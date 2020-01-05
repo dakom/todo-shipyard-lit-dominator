@@ -1,6 +1,5 @@
 import common_css from "@styles/common.css";
 import footer_css from "@styles/footer.css";
-import { BridgeEvent, send_event } from "@events/events";
 import { customElement, LitElement, property, css} from "lit-element";
 import {classMap} from 'lit-html/directives/class-map';
 import {nothing} from "lit-html";
@@ -36,7 +35,7 @@ class Footer extends LitElement {
 }
 
 const clear_completed = () => {
-    send_event(BridgeEvent.ClearCompleted);
+    //send_event(BridgeEvent.ClearCompleted);
 }
 
 const filterLine = (filter:Filter) => (current:Filter) => {

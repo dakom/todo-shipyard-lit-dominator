@@ -1,9 +1,26 @@
 use wasm_bindgen::prelude::*;
-use web_sys::{window, Window, Document, HtmlElement, Performance, Storage};
+use web_sys::{window, Window, Document, ShadowRoot, HtmlElement, Performance, Storage, Element};
+
+pub fn get_shadow_root(element:&HtmlElement) -> ShadowRoot {
+    element.shadow_root().expect("couldn't get shadow root!")
+}
+
+pub fn get_shadow_element_id(element:&HtmlElement, id:&str) -> Element {
+    get_shadow_root(element)
+        .get_element_by_id(id)
+        .unwrap_or_else(|| panic!(format!("couldn't get element {} in shadow root!", id)))
+}
+
+pub fn get_local_storage() -> Result<Storage, JsValue> {
+    get_window()?
+        .local_storage()?
+        .ok_or(JsValue::from_str("could not get local storage!"))
+}
 
 pub fn get_window() -> Result<Window, JsValue> {
     window().ok_or(JsValue::from_str("could not get window!"))
 }
+/*
 
 pub fn get_document() -> Result<Document, JsValue> {
     let window = get_window()?;
@@ -20,10 +37,6 @@ pub fn get_performance() -> Result<Performance, JsValue> {
     window.performance().ok_or(JsValue::from_str("could not get performance!"))
 }
 
-pub fn get_local_storage() -> Result<Storage, JsValue> {
-    let window = get_window()?;
-    window.local_storage()?.ok_or(JsValue::from_str("could not get local storage!"))
-}
 
 pub fn app_root() -> Result<web_sys::ShadowRoot, JsValue> {
     let document = get_document()?;
@@ -57,3 +70,4 @@ pub fn item_element_by_id(id:&str) -> Result<web_sys::Element, JsValue> {
         .shadow_root().ok_or(JsValue::from_str("couldn't get list shadow root!"))?
         .get_element_by_id(id).ok_or(JsValue::from_str("couldn't get list shadow root!"))
 }
+*/

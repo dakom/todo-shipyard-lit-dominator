@@ -2,7 +2,6 @@ import {LitElement, css, customElement, property} from "lit-element";
 import {nothing, html} from "lit-html";
 import {repeat} from 'lit-html/directives/repeat';
 import list_css from "@styles/list.css";
-import {send_event, BridgeEvent} from "@events/events";
 import {Item} from "@components/types/types";
 
 @customElement("todo-list")

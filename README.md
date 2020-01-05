@@ -10,11 +10,11 @@
 
 # Development
 
-The task runner uses [cargo-make](https://github.com/sagiegurari/cargo-make)
+1. Install prerequisites like [cargo-make](https://github.com/sagiegurari/cargo-make), and `npm install`
+2. `npm start` (will open a browser and rebuild/reload on source change - either typescript, rust, or static files)
 
-After installing that (and other dependencies for the project itself - e.g. npm install, rust nightly, etc.), these commands are available:
+More commands are available via `cargo make`:
 
-* `cargo make serve` (opens a browser and rebuilds/reloads on file change)
 * `cargo make test` (runs all the tests)
 * `cargo make build --profile production` (used in ci/cd - but can check out release builds in `dist/` this way)
 * `cargo make build --profile development` (same but used for seeing how non-optmized builds look)

@@ -10,7 +10,7 @@ export class Items extends LitElement {
         return html`
             <header class="header">
                 <h1>todos</h1>
-                <todo-input id="input"></todo-input>
+                <slot name="input"></slot>
             </header>
         `;
     }

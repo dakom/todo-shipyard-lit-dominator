@@ -1,8 +1,8 @@
 use wasm_bindgen::prelude::*;
-use super::accessors::*;
 use serde::{Serialize, Deserialize};
 use crate::components::Filter;
 use shipyard::EntityId;
+use web_sys::{window, Storage};
 
 #[derive(Serialize, Deserialize)]
 pub struct StoredData {
@@ -37,4 +37,11 @@ pub fn save_stored_data(data:&StoredData) -> Result<(), JsValue> {
     let json_str = serde_json::to_string(&data).map_err(|_| JsValue::from_str("couldn't serialize storage"))?;
 
     local_storage.set(STORAGE_NAME, &json_str)
+}
+
+
+pub fn get_local_storage() -> Result<Storage, JsValue> {
+    window().unwrap()
+        .local_storage()?
+        .ok_or(JsValue::from_str("could not get local storage!"))
 }

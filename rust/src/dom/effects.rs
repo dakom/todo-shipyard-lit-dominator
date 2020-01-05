@@ -1,13 +1,12 @@
-use futures_signals::signal::{Mutable, SignalExt};
-use dominator::{Dom, class, html, clone, events};
+        /*
 
-pub fn start_dom() {
-    dominator::append_dom(&dominator::body(), get_dom_tree());
-}
+                <todo-header id="header"></todo-header>
+                <todo-main id="main"></todo-main>
+                <todo-footer id="footer"></todo-footer>
+                */
 
-fn get_dom_tree() -> Dom {
-    html!("todo-app")
-}
+            //let element = get_shadow_element_id(element, "header").unwrap();
+            //.new(element)
 /*
 use wasm_bindgen::prelude::*;
 use super::accessors::*;

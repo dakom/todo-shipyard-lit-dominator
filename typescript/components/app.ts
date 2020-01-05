@@ -9,9 +9,7 @@ class App extends LitElement {
     render() {
         return html`
             <section class="todoapp">
-                <todo-header id="header"></todo-header>
-                <todo-main id="main"></todo-main>
-                <todo-footer id="footer"></todo-footer>
+                <slot></slot>
             </section>
             <footer class="info">
                 <p>Double-click to edit a todo</p>

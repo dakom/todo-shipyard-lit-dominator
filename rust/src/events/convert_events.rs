@@ -1,3 +1,4 @@
+/*
 use wasm_bindgen::prelude::*;
 use shipyard::prelude::*;
 use crate::components::Filter;
@@ -66,3 +67,4 @@ cfg_if! {
         }
     }
 }
+*/

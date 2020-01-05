@@ -2,17 +2,10 @@ use shipyard::prelude::*;
 use wasm_bindgen::prelude::*;
 use crate::components::*;
 use crate::events::*;
-use crate::context::AppContext;
 use crate::dom::storage;
 use std::collections::VecDeque;
-pub fn process_events(world:&mut World, event_queue:&mut VecDeque<Event>) -> Result<(), JsValue> {
-    while event_queue.len() != 0 {
-        if let Some(event) = event_queue.pop_front() {
-            process_event(world, event_queue, event)?;
-        }
-    }
-    Ok(())
-}
+
+/*
 pub fn process_event(world:&mut World, event_queue:&mut VecDeque<Event>, event:Event) -> Result<(), JsValue> {
     match event {
         Event::AddTodo(label) => {
@@ -84,3 +77,4 @@ pub fn process_event(world:&mut World, event_queue:&mut VecDeque<Event>, event:E
     }
     Ok(())
 }
+*/

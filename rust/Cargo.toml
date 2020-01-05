@@ -8,10 +8,11 @@ edition = "2018"
 crate-type = ["cdylib"]
 
 [dependencies]
-wasm-bindgen = "0.2.56"
+wasm-bindgen = { version = "0.2.56", features = ["serde-serialize"] }
 wasm-logger = { version = "0.2.0", optional = true }
-dominator = "0.5.5"
-futures-signals = "0.3.8"
+# dominator = "0.5.5"
+dominator = {path = "../../rust-dominator" }
+futures-signals = "0.3.9"
 lazy_static = "1.4.0"
 matches = "0.1.8"
 js-sys = "0.3.33"
@@ -34,7 +35,9 @@ web-sys = { version = "0.3.33", features = [
   'Window',
   'ShadowRoot',
   'Performance',
-  'Storage'
+  'Storage',
+  'CustomEvent',
+  'console'
 ] }
 
 # Just for tests

@@ -11,11 +11,18 @@ run_task = [
     {name = "build-production", condition = { profiles = [ "production"] } },
 ]
 
+##See: https://github.com/sagiegurari/cargo-make/issues/355
 [tasks.serve]
-run_task = [{name = [
-    "watch-rust",
-    "serve-webpack",
-], parallel = true}]
+script = ['''
+    echo waiting on https://github.com/sagiegurari/cargo-make/issues/355
+    echo in the meantime use npm start
+''']
+
+# [tasks.serve]
+# run_task = [{name = [
+#     "watch-rust",
+#     "serve-webpack",
+# ], parallel = true}]
 
 [tasks.test]
 run_task = [{name = [
@@ -59,8 +66,8 @@ args = ["make", "watch"]
 cwd = "rust"
 
 ##See: https://github.com/sagiegurari/cargo-make/issues/355
-[tasks.serve-webpack]
-script = ["npx webpack-dev-server --config webpack.dev.js"]
+# [tasks.serve-webpack]
+# script = ["npx webpack-dev-server --config webpack.dev.js"]
 
 #######################
 ## Production Builds ##

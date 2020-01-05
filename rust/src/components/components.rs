@@ -1,6 +1,8 @@
 use num_derive::FromPrimitive;    
-use crate::events::Event;
+use futures_signals::signal_vec::{MutableVec};
+use shipyard::prelude::*;
 
+pub struct TodoList(pub MutableVec<EntityId>);
 pub struct ItemLabel (pub String);
 pub struct ItemComplete(pub bool); 
 
