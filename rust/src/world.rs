@@ -14,9 +14,9 @@ pub fn init_world() -> World {
         ItemComplete,
     )>();
 
-    world.register_unique(Filter::default());
-    world.register_unique(Phase::default());
-    world.register_unique(TodoList(MutableVec::new()));
+    world.add_unique(Filter::default());
+    world.add_unique(Phase::default());
+    world.add_unique(TodoList(MutableVec::new()));
 
     world.update_pack::<ItemLabel>();
     world.update_pack::<ItemComplete>();

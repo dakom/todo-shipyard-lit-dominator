@@ -8,19 +8,18 @@ import {Item} from "@components/types/types";
 class List extends LitElement {
     static styles = list_css;
 
-    @property( { type : Array }  ) items = [] as Array<Item>;
-
     render() {
-        const {items} = this;
-
         return html`
             <ul class="todo-list">
-                ${repeat(
-                    items, 
-                    item => item.id,
-                    item => html`<todo-item id=${item.id} .item_id=${item.id} .label=${item.label} .completed=${item.completed} />`
-                )}
+                <slot></slot>
             </ul>
         `;
     }
 }
+/*
+${repeat(
+    items, 
+    item => item.id,
+    item => html`<todo-item id=${item.id} .item_id=${item.id} .label=${item.label} .completed=${item.completed} />`
+)}
+*/

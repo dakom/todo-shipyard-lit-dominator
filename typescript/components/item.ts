@@ -4,26 +4,26 @@ import {repeat} from 'lit-html/directives/repeat';
 import common_css from "@styles/common.css";
 import item_css from "@styles/item.css";
 import { classMap } from "lit-html/directives/class-map";
-import {KEYS} from "@components/types/types";
+import {KEYS, Item} from "@components/types/types";
 
 @customElement("todo-item")
 class _Item extends LitElement {
     static styles = [common_css, item_css];
 
-    @property( { type : String }  ) label = "";
-    @property( { type : String }  ) item_id = "";
-    @property( { type : Boolean }  ) completed = false; 
+    @property( { type : Object }  ) item = null as Item;
     @property( { type : Boolean }  ) editing = false; 
 
     render() {
+        const {label, id, completed} = this.item;
+
         return this.editing
-            ? html`<todo-edit-line @stop-editing=${() => this.editing = false} .label=${this.label} .item_id=${this.item_id} />` 
+            ? html`<todo-edit-line @stop-editing=${() => this.editing = false} .label=${label} .item_id=${id} />` 
             : html`
-                <li class=${classMap({completed: this.completed})} >
+                <li class=${classMap({completed: completed})} >
                     <div class="view">
-                        <input class="toggle" type="checkbox" .checked=${this.completed} @change=${evt => on_complete_toggle (this.item_id) (evt.target.checked)}/>
-                        <label @dblclick=${() => this.editing = true}>${this.label}</label>
-                        <button class="destroy" @click=${() => on_destroy(this.item_id)} ></button>
+                        <input class="toggle" type="checkbox" .checked=${completed} @change=${evt => on_complete_toggle (id) (evt.target.checked)}/>
+                        <label @dblclick=${() => this.editing = true}>${label}</label>
+                        <button class="destroy" @click=${() => on_destroy(id)} ></button>
                     </div>
                 </li>
             `;
