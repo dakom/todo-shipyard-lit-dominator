@@ -3,9 +3,9 @@ use dominator::traits::{StaticEvent};
 use web_sys::{EventTarget, CustomEvent};
 use wasm_bindgen::{JsValue, JsCast};
 use serde::{Serialize, Deserialize};
-use crate::world::WORLD;
 use shipyard::prelude::*;
 use crate::components::*;
+use std::rc::Rc;
 
 // add todo
 #[derive(Deserialize)]
@@ -14,15 +14,6 @@ pub struct AddTodo {
 }
 make_custom_event_serde!(AddTodoEvent, "add-todo", AddTodo);
 
-pub fn add_todo(data:&AddTodo) {
-    let entity = WORLD.run::<(EntitiesMut, &mut ItemLabel, &mut ItemComplete), _, _>(|(mut entities, mut item_labels, mut item_completes)| {
-        entities.add_entity((&mut item_labels, &mut item_completes), (ItemLabel(data.label.to_string()), ItemComplete(false)))
-    });
-
-    WORLD.run::<Unique<&mut TodoList>, _, _>(|mut todo_list| {
-        todo_list.0.lock_mut().push(entity);
-    });
-}
 
 
 /*

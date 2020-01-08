@@ -4,12 +4,13 @@ import {render} from "lit-html";
 import {html} from "lit-element";
 import {WasmCore} from "@utils/wasm-types";
 
-(window as any).load_wasm((core:WasmCore) => {
+(window as any).load_wasm((wasm:WasmCore) => {
     //init wasm
-    core.init_app();
+    const app_ctx = wasm.init_app();
 
-    //init event sender
-
+    //TODO: move to Rustcheck for save every second or so 
+    setInterval(() => wasm.on_tick(app_ctx), 1000);
+    /*
     //kick off the loop where all the magic happens
     const on_tick = (now:DOMHighResTimeStamp) => {
         core.on_tick(now);
@@ -20,6 +21,7 @@ import {WasmCore} from "@utils/wasm-types";
     //handle initial router and changes
     start_router();
 
+    */
     //start initial load
     //send_event(BridgeEvent.InitialLoad);
 

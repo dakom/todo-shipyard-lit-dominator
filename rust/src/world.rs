@@ -1,27 +1,20 @@
 use shipyard::prelude::*;
 use crate::components::*;
-use crate::systems;
 use futures_signals::signal_vec::{MutableVec};
+use futures_signals::signal::{Mutable};
 use lazy_static::lazy_static;
-
-lazy_static! {
-    pub static ref WORLD:World = init_world(); 
-}
 
 pub fn init_world() -> World {
     let mut world = World::new::<(
-        ItemLabel,
-        ItemComplete,
+        Label,
+        Complete,
     )>();
 
-    world.add_unique(Filter::default());
-    world.add_unique(Phase::default());
-    world.add_unique(TodoList(MutableVec::new()));
-
-    world.update_pack::<ItemLabel>();
-    world.update_pack::<ItemComplete>();
-
-    systems::workloads::register_workloads(&mut world);
+    world.add_unique(List (MutableVec::new()));
+    world.add_unique(Filter(Mutable::new(FilterType::default())));
+    world.add_unique(Phase(Mutable::new(PhaseType::default())));
+    world.add_unique(SaveTag(false));
+    world.tight_pack::<(Label, Complete)>();
 
     world
 }

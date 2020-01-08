@@ -1,6 +1,2 @@
-mod events;
-mod handle_event;
-
-pub use events::*;
-pub use handle_event::*;
-
+pub mod event_handlers;
+pub mod event_types;

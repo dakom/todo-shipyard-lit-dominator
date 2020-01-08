@@ -1,9 +1,11 @@
 #![allow(warnings)]
 
-mod events;
-#[path = "components/components.rs"]
+mod actions;
 mod components;
 mod dom;
+mod events;
+mod signals;
+mod storage;
 mod systems;
 mod world;
 
@@ -11,6 +13,7 @@ use cfg_if::cfg_if;
 use wasm_bindgen::prelude::*;
 use shipyard::prelude::*;
 use std::collections::VecDeque;
+use std::rc::Rc;
 
 #[cfg(feature = "wee_alloc")]
 #[global_allocator]
@@ -32,14 +35,25 @@ cfg_if! {
 }
 
 #[wasm_bindgen]
-pub fn init_app() {
-	setup();
-
-    dominator::append_dom(&dominator::body(), dom::tree::get_dom_tree());
+pub struct AppContext {
+    #[wasm_bindgen(skip)]
+    pub world: Rc<World>,
 }
 
 #[wasm_bindgen]
-pub fn on_tick(_now: f64) -> Result<(), JsValue> {
-    systems::workloads::run_all_workloads(&world::WORLD);
-    Ok(())
+pub fn init_app() -> AppContext {
+	setup();
+
+    let world = Rc::new(world::init_world());
+    systems::register_workloads(&world);
+    dominator::append_dom(&dominator::body(), dom::render(world.clone()));
+    storage::spawn_save_listener(world.clone());
+    storage::load(world.clone());
+
+    AppContext { world }
+}
+
+#[wasm_bindgen]
+pub fn on_tick(app_ctx:&mut AppContext) {
+    app_ctx.world.run_workload(systems::SAVE);
 }
