@@ -10,7 +10,7 @@ pub struct Label (pub Mutable<String>);
 pub struct Complete(pub Mutable<bool>); 
 pub struct SaveTag(pub bool);
 
-#[derive(FromPrimitive, Copy, Clone, Debug)]
+#[derive(FromPrimitive, PartialEq, Copy, Clone, Debug)]
 #[repr(u32)]
 pub enum FilterType {
     All,

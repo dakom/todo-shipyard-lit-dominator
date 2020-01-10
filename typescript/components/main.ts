@@ -3,6 +3,7 @@ import {nothing, html} from "lit-html";
 import {repeat} from 'lit-html/directives/repeat';
 import main_css from "@styles/main.css";
 import {Item} from "@components/types/types";
+import {ToggleAllTodos} from "@events/events";
 
 @customElement("todo-main")
 export class Items extends LitElement {
@@ -12,6 +13,9 @@ export class Items extends LitElement {
     @property( { type : Boolean }  ) all_completed = false;
 
     render() {
+
+        const on_toggle_all = (evt:any) => this.dispatchEvent(new ToggleAllTodos(evt.target.checked));
+
         return html`
             ${this.len === 0 
                 ? nothing
@@ -27,8 +31,4 @@ export class Items extends LitElement {
             }
         `
     }
-}
-
-const on_toggle_all = evt => {
-    //send_event([BridgeEvent.SetCompletedAll, evt.target.checked]);
 }

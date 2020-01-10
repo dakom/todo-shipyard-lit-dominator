@@ -18,6 +18,8 @@ class Footer extends LitElement {
     render() {
         const {total, remaining, completed, filter} = this;
 
+        console.log(remaining);
+
         return total === 0
             ? html`${nothing}`
             : html`

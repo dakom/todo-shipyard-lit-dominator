@@ -1,19 +1,116 @@
-use futures_signals::signal::{Mutable, Signal, SignalExt};
-use futures_signals::signal_vec::{SignalVec, SignalVecExt, MutableVec, MutableSignalVec};
 use shipyard::prelude::*;
 use shipyard::internal::{EntitiesViewMut, ViewMut};
 use crate::components::*;
+use futures_signals:: {
+    signal::{Mutable, Signal, SignalExt, always},
+    signal_vec::{SignalVec, SignalVecExt, MutableVec, MutableSignalVec},
+    map_ref
+};
+use dominator::clone;
+use wasm_bindgen::prelude::*;
+use serde::{Serialize, Deserialize};
+use crate::components::*;
+use crate::actions;
+use crate::signals;
+use crate::storage;
+use shipyard::prelude::*;
+use web_sys::{window, Storage};
+use std::rc::Rc;
+use wasm_bindgen_futures::spawn_local;
 
-pub fn add_todo(storages:(&mut (EntitiesViewMut, ViewMut<Label>, ViewMut<Complete>), &MutableVec<EntityId>), label:&str, complete: bool) {
-    let ((entities, labels, completes), todo_list) = storages;
+pub fn add_todo(world:&World, label:&str, complete:bool) {
+    world.run::<((EntitiesMut, &mut Label, &mut Complete), Unique<&List>), _, _>(|(mut views, list)| {
+        let (mut entities, labels, completes) = views;
+        let entity = entities.add_entity((labels, completes), 
+            (
+                Label(Mutable::new(label.to_string())), 
+                Complete(Mutable::new(complete))
+            ));
 
-    let entity = entities.add_entity((labels, completes), 
-        (
-            Label(Mutable::new(label.to_string())), 
-            Complete(Mutable::new(false))
-        ));
+        list.0.lock_mut().push(entity);
+    });
+}
 
-    todo_list.lock_mut().push(entity);
+pub fn remove_todo(world:&World, id:EntityId) {
+    world.run::<(Unique<&List>), _, _>(|list| {
+        let mut list = list.0.lock_mut();
+        list.retain(|list_id| *list_id != id);
+    });
+    world.run::<AllStorages, _, _>(|mut all_storages| {
+        all_storages.delete(id);
+    });
+}
 
-    log::info!("added entity {:?} with label {}", entity, label);
+pub fn toggle_todo(world:&World, id:EntityId, complete:bool) {
+    world.run::<&Complete, _, _>(|completes| {
+        *(&completes).get(id).unwrap().0.lock_mut() = complete;
+    });
+}
+
+pub fn change_todo(world:&World, id:EntityId, label:&str) {
+
+    log::info!("label: {}", label);
+
+    world.run::<&mut Label, _, _>(|labels| {
+        *(&labels).get(id).unwrap().0.lock_mut() = label.to_string();
+    });
+}
+
+pub fn toggle_all_todos(world:&World, complete: bool) {
+    world.run::<&Complete, _, _>(|completes| {
+        completes.iter().for_each(|item_complete| {
+            *item_complete.0.lock_mut() = complete;
+        });
+    });
+}
+
+pub fn load(world:Rc<World>) {
+
+    world.run::<Unique<&Phase>, _, _>(|mut phase| {
+        *phase.0.lock_mut() = PhaseType::Loading;
+    });
+
+    let cloned_world = world.clone();
+
+    let load_future = async move {
+        if let Some((data, data_str)) = storage::load_stored_data() {
+            data.items.iter().for_each(|(label, completed)| {
+                actions::add_todo(&cloned_world, label, *completed);
+            });
+        } else {
+            log::info!("no saved data - new session!");
+        }
+    };
+
+    spawn_local(async move {
+        load_future.await;
+
+        //Need to delay this so that the save listener doesn't see Ready until after the data settles
+        //TODO - actually delay the call rather than re-spawning, e.g. await on a Future created via setTimeout
+        spawn_local(async move {
+            world.run::<Unique<&Phase>, _, _>(|phase| {
+                *phase.0.lock_mut() = PhaseType::Ready;
+            });
+        });
+    });
+}
+
+pub fn spawn_save_listener(world:Rc<World>) {
+
+    let future = 
+        signals::all_items(world.clone())
+            .for_each(clone!(world => move |_diff| {
+                //We could actually do really efficient saving by using the diff
+                //Instead, just let the system check for a wholesale save every second or so
+                world.run::<(EntitiesMut, Unique<&Phase>, Unique<&mut SaveTag>), _, _>(|(entities, phase, save_tag)| {
+                    match phase.0.get() {
+                        PhaseType::Ready => {
+                            save_tag.0 = true;
+                        },
+                        _ => {}
+                    }
+                });
+                async {()}
+            }));
+    spawn_local(future);
 }

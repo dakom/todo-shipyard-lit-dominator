@@ -6,11 +6,9 @@ use wasm_bindgen::prelude::*;
 use serde::{Serialize};
 use js_sys::Array;
 use crate::components::*;
-use crate::events::{
-    event_types::*,
-    event_handlers as handle_event
-};
-use super::signals;
+use crate::actions;
+use crate::events::*;
+use super::signals::{self, SignalFilterType};
 use std::rc::Rc;
 
 macro_rules! html_at_slot {
@@ -20,6 +18,19 @@ macro_rules! html_at_slot {
             $($rest)*
         })
     };
+}
+
+#[derive(Serialize, Clone)]
+pub struct ListItem {
+    pub id: EntityId, 
+    pub label: String, 
+    pub complete: bool
+}
+
+impl ListItem {
+    pub fn to_js_value(&self) -> JsValue {
+        serde_wasm_bindgen::to_value(&self).unwrap()
+    }
 }
 
 pub fn render(world:Rc<World>) -> Dom {
@@ -55,7 +66,7 @@ fn header(world:Rc<World>) -> Dom {
         .children(&mut [
             html_at_slot!("todo-input", "input", {
                 .event(clone!(world => move |event: AddTodoEvent| {
-                    handle_event::add_todo(&world, &event.data().label);
+                    actions::add_todo(&world, &event.data().label, false);
                 }))
             })
         ])
@@ -64,43 +75,44 @@ fn header(world:Rc<World>) -> Dom {
 
 fn main(world:Rc<World>) -> Dom {
     html!("todo-main", {
-        .property_signal("len", signals::items_len_js(world.clone(), true))
+        .property_signal("len", signals::items_len_js(world.clone(), None))
         .children_signal_vec(
-            signals::item_ids(world.clone(), true)
+            signals::item_ids(world.clone(), Some(SignalFilterType::Default))
                 .map(clone!(world => move |entity_id| {
-                    item(&world, entity_id)
+                    item(world.clone(), entity_id)
                 }))
         )
+        .event(clone!(world => move |event:ToggleAllTodosEvent| {
+            actions::toggle_all_todos(&world, event.data().complete);
+        }))
     })
 }
 
-fn item(world:&World, entity_id:EntityId) -> Dom {
+fn item(world:Rc<World>, entity_id:EntityId) -> Dom {
     html!("todo-item", {
-        .property_signal("item", signals::item_js(world, entity_id))
+        .property_signal("item", signals::item_js(&world, entity_id))
+        .event(clone!(world => move |event:RemoveTodoEvent| {
+            actions::remove_todo(&world, event.data().id);
+        }))
+        .event(clone!(world => move |event:ToggleTodoEvent| {
+            actions::toggle_todo(&world, event.data().id, event.data().complete);
+        }))
+        .event(clone!(world => move |event:ChangeTodoEvent| {
+            actions::change_todo(&world, event.data().id, &event.data().label);
+        }))
     })
 }
 fn footer(world:Rc<World>) -> Dom {
-    html!("todo-footer")
-}
-
-
-/*
-fn js_items_all() -> impl Signal<Item = Array> {
-    items_all()
-        .to_signal_map(|items| {
-            items.into_iter().map(|item| item.to_js_value()).collect()
-        })
-}
-*/
-/*
-.property_signal("items", current_items_all())
-
-fn current_item_ids() -> impl SignalVec<Item = EntityId> { ... }
-
-fn current_items_all() -> impl SignalVec<Item = JsValue> {
-    current_item_ids().map(|entity_id| {
-        let foo:JsValue = convert_entity(entity_id);
-        foo
+    html!("todo-footer", {
+        .property_signal("total", signals::items_len_js(world.clone(), None))
+        .property_signal("remaining", signals::items_len_js(world.clone(), Some(SignalFilterType::Override(FilterType::Active))))
+        .property_signal("completed", signals::items_len_js(world.clone(), Some(SignalFilterType::Override(FilterType::Completed))))
     })
 }
+
+/*
+    @property( { type : Number} ) total = 0; 
+    @property( { type : Number} ) remaining = 0; 
+    @property( { type : Number} ) completed = 0; 
+    @property( { type : Number} ) filter = Filter.All 
 */

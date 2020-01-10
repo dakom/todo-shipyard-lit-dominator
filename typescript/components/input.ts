@@ -11,9 +11,9 @@ class Input extends LitElement {
     check_keypress (evt:KeyboardEvent) {
         if(evt.keyCode === KEYS.ENTER) {
             const input = evt.target as HTMLInputElement;
-            const value = input.value.trim();
-            if(value !== "") {
-                this.dispatchEvent(new AddTodo(value));
+            const label = input.value.trim();
+            if(label !== "") {
+                this.dispatchEvent(new AddTodo({label}));
             }
             input.value = "";
         }

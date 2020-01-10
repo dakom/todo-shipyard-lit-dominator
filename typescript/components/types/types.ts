@@ -1,6 +1,6 @@
 export interface Item {
     label: string;
-    completed: boolean;
+    complete: boolean;
     id: string;
 }
 

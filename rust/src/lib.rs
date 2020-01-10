@@ -47,8 +47,8 @@ pub fn init_app() -> AppContext {
     let world = Rc::new(world::init_world());
     systems::register_workloads(&world);
     dominator::append_dom(&dominator::body(), dom::render(world.clone()));
-    storage::spawn_save_listener(world.clone());
-    storage::load(world.clone());
+    actions::spawn_save_listener(world.clone());
+    actions::load(world.clone());
 
     AppContext { world }
 }
