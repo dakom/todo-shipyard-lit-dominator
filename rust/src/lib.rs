@@ -8,6 +8,7 @@ mod signals;
 mod storage;
 mod systems;
 mod world;
+mod router;
 
 use cfg_if::cfg_if;
 use wasm_bindgen::prelude::*;
@@ -49,7 +50,7 @@ pub fn init_app() -> AppContext {
     dominator::append_dom(&dominator::body(), dom::render(world.clone()));
     actions::spawn_save_listener(world.clone());
     actions::load(world.clone());
-
+    router::start(world.clone());
     AppContext { world }
 }
 

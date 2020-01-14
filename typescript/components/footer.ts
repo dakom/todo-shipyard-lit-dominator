@@ -5,6 +5,7 @@ import {classMap} from 'lit-html/directives/class-map';
 import {nothing} from "lit-html";
 import { html } from "lit-html";
 import {Filter} from "@components/types/types";
+import {ClearCompleted} from "@events/events";
 
 @customElement("todo-footer")
 class Footer extends LitElement {
@@ -18,7 +19,7 @@ class Footer extends LitElement {
     render() {
         const {total, remaining, completed, filter} = this;
 
-        console.log(remaining);
+        const on_clear_completed = () => this.dispatchEvent(new ClearCompleted());
 
         return total === 0
             ? html`${nothing}`
@@ -30,14 +31,10 @@ class Footer extends LitElement {
                         ${filterLine (Filter.Active) (filter)}
                         ${filterLine (Filter.Completed) (filter)}
                     </ul>
-                    ${completed ? html`<button class="clear-completed" @click=${clear_completed}>Clear completed</button>` : nothing}
+                    ${completed ? html`<button class="clear-completed" @click=${on_clear_completed.bind(this)}>Clear completed</button>` : nothing}
                 </footer>
             `;
     }
-}
-
-const clear_completed = () => {
-    //send_event(BridgeEvent.ClearCompleted);
 }
 
 const filterLine = (filter:Filter) => (current:Filter) => {

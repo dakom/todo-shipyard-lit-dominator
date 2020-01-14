@@ -107,6 +107,10 @@ fn footer(world:Rc<World>) -> Dom {
         .property_signal("total", signals::items_len_js(world.clone(), None))
         .property_signal("remaining", signals::items_len_js(world.clone(), Some(SignalFilterType::Override(FilterType::Active))))
         .property_signal("completed", signals::items_len_js(world.clone(), Some(SignalFilterType::Override(FilterType::Completed))))
+        .property_signal("filter", signals::filter_js(&world))
+        .event(clone!(world => move |event:ClearCompletedEvent| {
+            actions::clear_completed(&world);
+        }))
     })
 }
 

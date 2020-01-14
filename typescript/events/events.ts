@@ -28,3 +28,9 @@ export class ToggleAllTodos extends CustomEvent<{complete: boolean}> {
         super("toggle-all-todos", { detail: {complete} });
     }
 }
+
+export class ClearCompleted extends CustomEvent<null> {
+    constructor() {
+        super("clear-completed");
+    }
+}

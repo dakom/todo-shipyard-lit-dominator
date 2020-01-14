@@ -41,6 +41,12 @@ pub fn remove_todo(world:&World, id:EntityId) {
     });
 }
 
+pub fn change_filter(world:&World, filter_type:FilterType) {
+    world.run::<(Unique<&Filter>), _, _>(|filter| {
+        *filter.0.lock_mut() = filter_type;
+    });
+}
+
 pub fn toggle_todo(world:&World, id:EntityId, complete:bool) {
     world.run::<&Complete, _, _>(|completes| {
         *(&completes).get(id).unwrap().0.lock_mut() = complete;
@@ -48,9 +54,6 @@ pub fn toggle_todo(world:&World, id:EntityId, complete:bool) {
 }
 
 pub fn change_todo(world:&World, id:EntityId, label:&str) {
-
-    log::info!("label: {}", label);
-
     world.run::<&mut Label, _, _>(|labels| {
         *(&labels).get(id).unwrap().0.lock_mut() = label.to_string();
     });
@@ -61,6 +64,28 @@ pub fn toggle_all_todos(world:&World, complete: bool) {
         completes.iter().for_each(|item_complete| {
             *item_complete.0.lock_mut() = complete;
         });
+    });
+}
+
+pub fn clear_completed(world:&World) {
+    let completed_ids:Vec<EntityId> = world.run::<&Complete, _, _>(|completes| {
+        (&completes)
+            .iter()
+            .filter(|complete| complete.0.get())
+            .with_id()
+            .map(|(id, _)| id)
+            .collect()
+    });
+
+    world.run::<(Unique<&List>), _, _>(|list| {
+        let mut list = list.0.lock_mut();
+        list.retain(|list_id| !completed_ids.contains(list_id));
+    });
+
+    world.run::<AllStorages, _, _>(|mut all_storages| {
+        for id in completed_ids.iter() {
+            all_storages.delete(*id);
+        }
     });
 }
 
