@@ -4,9 +4,56 @@
 
 # Architecture
 
-* Logic and State are handled in Rust via [shipyard ECS](https://github.com/leudz/shipyard)
-* DOM is populated by WebComponents which use [lit-element](https://lit-element.polymer-project.org/)
-* CSS for this demo is from [TodoMVC](http://todomvc.com/)
+* [Rust] Logic and State are handled via the [Shipyard Entity Component System](https://github.com/leudz/shipyard)
+* [Rust] DOM is rendered via [Dominator](https://github.com/pauan/rust-dominator)
+* [Rust] This happens declaratively due to the ECS holding [Signals](https://github.com/Pauan/rust-signals)
+* [Typescript] Aesthetics are driven by WebComponents in [lit-element](https://lit-element.polymer-project.org/)
+
+### More specifically
+
+* [typescript/components](typescript/components): web components (including styles and typescript helpers)
+* [typescript/events](typescript/events): `CustomEvent`s that are emitted from the web components (and intercepted by Dominator)
+* [rust/src/actions.rs](rust/src/actions.rs): Shipyard world updaters 
+* [rust/src/components.rs](rust/src/components.rs): ecs components that hold data 
+* [rust/src/dom.rs](rust/src/dom.rs): Dominator tree 
+* [rust/src/events.rs](rust/src/events.rs): mirror of the typescript `CustomEvents` but in Rust (and with helpers to do the conversion, run tests, etc.)
+* [rust/src/lib.rs](rust/src/lib.rs): main entry point 
+* [rust/src/router.rs](rust/src/router.rs): url routing
+* [rust/src/signals.rs](rust/src/signals.rs): Signals that are generated from Shipyard components (which hold `Mutable`/`MutableVec`s) and fed to Dominator
+* [rust/src/storage.rs](rust/src/storage.rs): accessors for LocalStorage 
+* [rust/src/systems.rs](rust/src/systems.rs): Shipyard systems 
+* [rust/src/timers.rs](rust/src/timers.rs): timer loops 
+* [rust/src/world.rs](rust/src/world.rs): Shipyard world registration 
+* [typescript/tests/events.spec.ts](typescript/tests/events.spec.ts): unit tests to check event conversion
+
+# Communication and Flow
+
+It's essentially like this:
+
+Shipyard Components -> Signals -> Dominator -> Web Components -> Events -> Update Shipyard
+
+Some systems are run on a timer to update the ECS outside this flow.
+
+This implies a couple things:
+
+1. Events flow unidirectionally from the dom to the ecs.
+2. The dom is rendered declaratively based on app state.
+
+This is basically the React, Elm, FRP, etc. pattern. For dom rendering itself, it is merely standing on the shoulders of Dominator. 
+
+However, by holding state in a proper ECS there are a couple interesting advantages: 
+
+1. It is idiomatic to update state ad-hoc without any connection to the dom tree
+2. Thinking in a data-oriented way (and getting the performance advantages where possible)
+3. Everything is extremely decoupled. For example, the same `World` could be used to power an imperative webgl renderer. _Some_ components hold Mutables that turn into Signals that update the dom - but that's a choice, not a requirement.
+
+# Events
+
+In order to communicate from the Typescript web components to the Rust event handlers, events need to be converted.
+
+It's pretty straightforward - on the typescript side extend CustomEvent and on the Rust side use the helper macros.
+
+Ultimately, by making sure all events are covered in the [unit test](typescript/tests/events.spec.ts) you can't go wrong.
 
 # Development
 
@@ -18,3 +65,7 @@ More commands are available via `cargo make`:
 * `cargo make test` (runs all the tests)
 * `cargo make build --profile production` (used in ci/cd - but can check out release builds in `dist/` this way)
 * `cargo make build --profile development` (same but used for seeing how non-optmized builds look)
+
+# Prior Art
+
+This picks up where [wasm-app-boilerplate](https://github.com/dakom/wasm-app-boilerplate) left off
