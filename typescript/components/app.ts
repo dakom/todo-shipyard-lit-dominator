@@ -13,7 +13,7 @@ class App extends LitElement {
             </section>
             <footer class="info">
                 <p>Double-click to edit a todo</p>
-                <p><a href="https://github.com/dakom/todo-shipyard-lit"><u>Repo on Github</u></a></p>
+                <p><a href="https://github.com/dakom/todo-shipyard-lit-dominator"><u>Repo on Github</u></a></p>
             </footer>
         `
     }
