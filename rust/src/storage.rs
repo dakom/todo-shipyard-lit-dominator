@@ -28,7 +28,7 @@ impl StoredData {
     }
 }
 
-const STORAGE_NAME:&'static str = "todos-shipyard-lit";
+const STORAGE_NAME:&'static str = "todos-shipyard-lit-dominator";
 
 pub fn load_stored_data() -> Option<(StoredData, String)> {
     let local_storage = get_local_storage().unwrap();

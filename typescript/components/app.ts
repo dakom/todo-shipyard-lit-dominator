@@ -12,7 +12,6 @@ class App extends LitElement {
                 <slot></slot>
             </section>
             <footer class="info">
-                <p>Double-click to edit a todo</p>
                 <p><a href="https://github.com/dakom/todo-shipyard-lit-dominator"><u>Repo on Github</u></a></p>
             </footer>
         `

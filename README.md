@@ -6,10 +6,39 @@
 
 * [Rust] Logic and State are handled via the [Shipyard Entity Component System](https://github.com/leudz/shipyard)
 * [Rust] DOM is rendered via [Dominator](https://github.com/pauan/rust-dominator)
-* [Rust] This happens declaratively due to the ECS holding [Signals](https://github.com/Pauan/rust-signals)
+* [Rust] This happens declaratively due to the ECS holding things that generate [Signals](https://github.com/Pauan/rust-signals)
 * [Typescript] Aesthetics are driven by WebComponents in [lit-element](https://lit-element.polymer-project.org/)
 
-### More specifically
+# Communication and Flow
+
+It's essentially like this:
+
+Shipyard Components -> Signals -> Dominator -> Web Components -> Events -> Update Shipyard (back to beginning)
+
+This implies a couple things:
+
+1. Events flow unidirectionally from the dom to the ecs.
+2. The dom is rendered declaratively based on app state.
+
+This is basically the React, Elm, FRP, pattern. For dom rendering itself, it is merely standing on the shoulders of Dominator. 
+
+Yet - systems and ad-hoc world updates can happen outside the above flow too and modify the same state. For those coming from frameworks like Redux it may sound familiar. In this demo, the save mechanism runs a system on a timer, completely independently of the dom.
+
+By holding state in a proper ECS there are some interesting advantages: 
+
+1. It is idiomatic to update state without any connection to the dom tree whatsoever and the ECS provides ways to make this very efficient
+2. Thinking in a data-oriented way (and getting the hardcore performance advantages where possible)
+3. Everything is extremely decoupled. For example, the same `World` could be used to power an imperative webgl renderer. _Some_ components hold Mutables that turn into Signals that update the dom - but that's a choice, not a requirement.
+
+# Events
+
+In order to communicate from the Typescript web components to the Rust event handlers, events need to be converted.
+
+It's pretty straightforward - on the typescript side extend CustomEvent and on the Rust side use the helper macros.
+
+Ultimately, by making sure all events are covered in the [unit test](typescript/tests/events.spec.ts) you can't go wrong.
+
+### Breakdown
 
 * [typescript/components](typescript/components): web components (including styles and typescript helpers)
 * [typescript/events/events.ts](typescript/events/events.ts): `CustomEvent`s that are emitted from the web components (and intercepted by Dominator)
@@ -25,35 +54,6 @@
 * [rust/src/timers.rs](rust/src/timers.rs): timer loops 
 * [rust/src/world.rs](rust/src/world.rs): Shipyard world registration 
 * [typescript/tests/events.spec.ts](typescript/tests/events.spec.ts): unit tests to check event conversion
-
-# Communication and Flow
-
-It's essentially like this:
-
-Shipyard Components -> Signals -> Dominator -> Web Components -> Events -> Update Shipyard
-
-Some systems are run on a timer to update the ECS outside this flow.
-
-This implies a couple things:
-
-1. Events flow unidirectionally from the dom to the ecs.
-2. The dom is rendered declaratively based on app state.
-
-This is basically the React, Elm, FRP, etc. pattern. For dom rendering itself, it is merely standing on the shoulders of Dominator. 
-
-However, by holding state in a proper ECS there are a couple interesting advantages: 
-
-1. It is idiomatic to update state ad-hoc without any connection to the dom tree
-2. Thinking in a data-oriented way (and getting the performance advantages where possible)
-3. Everything is extremely decoupled. For example, the same `World` could be used to power an imperative webgl renderer. _Some_ components hold Mutables that turn into Signals that update the dom - but that's a choice, not a requirement.
-
-# Events
-
-In order to communicate from the Typescript web components to the Rust event handlers, events need to be converted.
-
-It's pretty straightforward - on the typescript side extend CustomEvent and on the Rust side use the helper macros.
-
-Ultimately, by making sure all events are covered in the [unit test](typescript/tests/events.spec.ts) you can't go wrong.
 
 # Development
 
