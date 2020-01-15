@@ -9,6 +9,7 @@ mod storage;
 mod systems;
 mod world;
 mod router;
+mod timers;
 
 use cfg_if::cfg_if;
 use wasm_bindgen::prelude::*;
@@ -36,13 +37,7 @@ cfg_if! {
 }
 
 #[wasm_bindgen]
-pub struct AppContext {
-    #[wasm_bindgen(skip)]
-    pub world: Rc<World>,
-}
-
-#[wasm_bindgen]
-pub fn init_app() -> AppContext {
+pub fn init_app() {
 	setup();
 
     let world = Rc::new(world::init_world());
@@ -51,10 +46,5 @@ pub fn init_app() -> AppContext {
     actions::spawn_save_listener(world.clone());
     actions::load(world.clone());
     router::start(world.clone());
-    AppContext { world }
-}
-
-#[wasm_bindgen]
-pub fn on_tick(app_ctx:&mut AppContext) {
-    app_ctx.world.run_workload(systems::SAVE);
+    timers::start(world)
 }

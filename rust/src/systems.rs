@@ -20,9 +20,6 @@ pub fn run (save_tag:Unique<&mut SaveTag>, list:Unique<&List>, labels:&Label, co
             .collect();
 
         storage::save_stored_data(&storage::StoredData::new(items)).unwrap();
-    } else {
-        //log::info!("NOT SAVING...");
-    }
-
-    save_tag.0 = false;
+        save_tag.0 = false;
+    } 
 }

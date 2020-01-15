@@ -22,12 +22,20 @@ pub fn start(world:Rc<World>) {
 }
 
 fn get_filter(window:&web_sys::Window) -> FilterType {
-    let hash = window.location().hash().unwrap();
-    let hash = &hash[2..];
+    match window.location().hash() {
+        Err(_) => FilterType::All,
+        Ok(hash) => {
+            if hash.len() > 2 {
+                let hash = &hash[2..];
 
-    match hash {
-        "active" => FilterType::Active,
-        "completed" => FilterType::Completed,
-        _ => FilterType::All
+                match hash {
+                    "active" => FilterType::Active,
+                    "completed" => FilterType::Completed,
+                    _ => FilterType::All
+                }
+            } else {
+                FilterType::All
+            }
+        }
     }
 }

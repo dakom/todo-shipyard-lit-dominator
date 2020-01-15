@@ -1,13 +1,12 @@
+//this will cause all the components to be registered
+//note there is no module name
 import "./components";
-import {Filter} from "@components/types/types";
-import {render} from "lit-html";
-import {html} from "lit-element";
-import {WasmCore} from "@utils/wasm-types";
 
+//to get the typescript without needing to go through the webpack dance
+import * as _WasmCore from "../_static/wasm/core/pkg/my_core_bg";
+type WasmCore = typeof _WasmCore;
+
+//see index.html
 (window as any).load_wasm((wasm:WasmCore) => {
-    //init wasm
-    const app_ctx = wasm.init_app();
-
-    //TODO: move to Rust in order to run systems (check for save every second or so)
-    setInterval(() => wasm.on_tick(app_ctx), 1000);
+    wasm.init_app();
 });
