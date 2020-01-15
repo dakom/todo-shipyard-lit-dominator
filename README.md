@@ -12,7 +12,7 @@
 ### More specifically
 
 * [typescript/components](typescript/components): web components (including styles and typescript helpers)
-* [typescript/events](typescript/events): `CustomEvent`s that are emitted from the web components (and intercepted by Dominator)
+* [typescript/events/events.ts](typescript/events/events.ts): `CustomEvent`s that are emitted from the web components (and intercepted by Dominator)
 * [rust/src/actions.rs](rust/src/actions.rs): Shipyard world updaters 
 * [rust/src/components.rs](rust/src/components.rs): ecs components that hold data 
 * [rust/src/dom.rs](rust/src/dom.rs): Dominator tree 
