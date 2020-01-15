@@ -2,6 +2,8 @@
 
 ## [LIVE DEMO](https://dakom.github.io/todo-shipyard-lit-dominator)
 
+## [Medium Article](https://medium.com/@david.komer/shipyard-dominator-litelement-b4bcdc7ec42d)
+
 # Architecture
 
 * [Rust] Logic and State are handled via the [Shipyard Entity Component System](https://github.com/leudz/shipyard)
