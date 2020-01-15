@@ -1,22 +1,53 @@
-import { BridgeEvent } from "@events/events";
-import { get_enum_pairs, enum_pairs_to_list } from "@utils/enums";
-const {get_bridge_event_pairs} = require("../../_static/wasm/core/pkg/my_core");
+if (typeof CustomEvent === "undefined") {
+  (global as any)["CustomEvent"] = 
+    class CustomEvent<T> {
+        type:string;
+        detail:T;
 
-const rust_bridge_events = enum_pairs_to_list(get_bridge_event_pairs());
-const ts_bridge_events = enum_pairs_to_list(get_enum_pairs(BridgeEvent));
+        constructor(name:string, props:{detail: T} ) {
+            this.type = name;
+            this.detail = props ? props.detail : null;
+        }
+    }
+}
 
-describe("all ts types have rust equivilent", () => {
-    ts_bridge_events.forEach((name, index) => {
-        test(`[${name}] exists in rust bridge event`, () => {
-           expect(rust_bridge_events[index]).toBe(name)
-        });
+import {
+    AddTodo,
+    RemoveTodo,
+    ToggleTodo,
+    ChangeTodo,
+    ToggleAllTodos,
+    ClearCompleted
+} from "@events/events";
+
+
+const wasm = require("../../_static/wasm/core/pkg/my_core");
+
+describe("check event types", () => {
+    test("AddTodo", () => {
+        const event = new AddTodo({label: "hello"});
+        expect(wasm.check_rust_event_AddTodo(event)).toEqual(JSON.stringify(event.detail));
     });
-});
 
-describe("all rust types have ts equivilent", () => {
-    rust_bridge_events.forEach((name, index) => {
-        test(`[${name}] exists in ts bridge event`, () => {
-           expect(ts_bridge_events[index]).toBe(name)
-        });
+    test("RemoveTodo", () => {
+        const event = new RemoveTodo({id: [1,0]});
+        expect(wasm.check_rust_event_RemoveTodo(event)).toEqual(JSON.stringify(event.detail));
+    });
+
+    test("ToggleTodo", () => {
+        const event = new ToggleTodo({id: [1,0], complete: true});
+        expect(wasm.check_rust_event_ToggleTodo(event)).toEqual(JSON.stringify(event.detail));
+    });
+    test("ChangeTodo", () => {
+        const event = new ChangeTodo({id: [1,0], label: "hello"});
+        expect(wasm.check_rust_event_ChangeTodo(event)).toEqual(JSON.stringify(event.detail));
+    });
+    test("ToggleAllTodos", () => {
+        const event = new ToggleAllTodos(true);
+        expect(wasm.check_rust_event_ToggleAllTodos(event)).toEqual(JSON.stringify(event.detail));
+    });
+    test("ClearCompleted", () => {
+        const event = new ClearCompleted();
+        expect(wasm.check_rust_event_ClearCompleted(event)).toEqual(JSON.stringify(event.detail));
     });
 });

@@ -1,8 +1,10 @@
 export interface Item {
     label: string;
     complete: boolean;
-    id: string;
+    id: EntityId;
 }
+
+export type EntityId = [number, number];
 
 export enum Filter {
     All,

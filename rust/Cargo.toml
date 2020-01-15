@@ -19,6 +19,7 @@ lazy_static = "1.4.0"
 matches = "0.1.8"
 js-sys = "0.3.35"
 cfg-if = "0.1.10"
+paste = "0.1.6"
 log = "0.4.8"
 num-traits = "0.2.10"
 num-derive = "0.3.0"
@@ -42,11 +43,7 @@ web-sys = { version = "0.3.35", features = [
   'console'
 ] }
 
-# Just for tests
-strum = { version = "0.17.1", optional = true }
-strum_macros = { version = "0.17.1", optional = true }
-
 [features]
 default = ["wee_alloc"]
-ts_test = ["strum", "strum_macros"]
+ts_test = []
 dev = ["wee_alloc", "wasm-logger", "console_error_panic_hook"]

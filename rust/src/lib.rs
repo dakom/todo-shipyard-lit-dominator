@@ -1,16 +1,5 @@
 #![allow(warnings)]
 
-mod actions;
-mod components;
-mod dom;
-mod events;
-mod signals;
-mod storage;
-mod systems;
-mod world;
-mod router;
-mod timers;
-
 use cfg_if::cfg_if;
 use wasm_bindgen::prelude::*;
 use shipyard::prelude::*;
@@ -36,15 +25,35 @@ cfg_if! {
     }
 }
 
-#[wasm_bindgen]
-pub fn init_app() {
-	setup();
+cfg_if! {
+    if #[cfg(feature = "ts_test")] {
+        mod events;
+    } else {
+        mod actions;
+        mod components;
+        mod dom;
+        mod events;
+        mod signals;
+        mod storage;
+        mod systems;
+        mod world;
+        mod router;
+        mod timers;
 
-    let world = Rc::new(world::init_world());
-    systems::register_workloads(&world);
-    dominator::append_dom(&dominator::body(), dom::render(world.clone()));
-    actions::spawn_save_listener(world.clone());
-    actions::load(world.clone());
-    router::start(world.clone());
-    timers::start(world)
+        #[wasm_bindgen]
+        pub fn init_app() {
+            setup();
+
+            let world = Rc::new(world::init_world());
+            systems::register_workloads(&world);
+            dominator::append_dom(&dominator::body(), dom::render(world.clone()));
+            actions::spawn_save_listener(world.clone());
+            actions::load(world.clone());
+            router::start(world.clone());
+            timers::start(world)
+        }
+    }
 }
+
+
+

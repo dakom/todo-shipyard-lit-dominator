@@ -1,24 +1,26 @@
+import {EntityId} from "@components/types/types";
+
 export class AddTodo extends CustomEvent<{label: string}> {
     constructor(detail: {label:string}) {
         super("add-todo", { detail });
     }
 }
 
-export class RemoveTodo extends CustomEvent<{id: string}> {
-    constructor(detail: {id:string}) {
+export class RemoveTodo extends CustomEvent<{id: EntityId}> {
+    constructor(detail: {id:EntityId}) {
         super("remove-todo", { detail });
     }
 }
 
-export class ToggleTodo extends CustomEvent<{id: string, complete: boolean}> {
-    constructor(detail:{id:string, complete: boolean}) {
+export class ToggleTodo extends CustomEvent<{id: EntityId, complete: boolean}> {
+    constructor(detail:{id:EntityId, complete: boolean}) {
         super("toggle-todo", { detail });
     }
 }
 
 
-export class ChangeTodo extends CustomEvent<{id: string, label: string}> {
-    constructor(detail:{id:string, label:string}) {
+export class ChangeTodo extends CustomEvent<{id: EntityId, label: string}> {
+    constructor(detail:{id:EntityId, label:string}) {
         super("change-todo", { detail });
     }
 }
