@@ -2,7 +2,6 @@ import {LitElement, customElement, property, css} from "lit-element";
 import {nothing, html} from "lit-html";
 import {repeat} from 'lit-html/directives/repeat';
 import main_css from "@styles/main.css";
-import {Item} from "@components/types/types";
 import {ToggleAllTodos} from "@events/events";
 
 @customElement("todo-main")

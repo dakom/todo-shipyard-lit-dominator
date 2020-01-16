@@ -17,8 +17,10 @@ import {
     ToggleTodo,
     ChangeTodo,
     ToggleAllTodos,
-    ClearCompleted
+    ClearCompleted,
+    Reposition
 } from "@events/events";
+import { DropSide } from "@events/types/types";
 
 
 const wasm = require("../../_static/wasm/core/pkg/my_core");
@@ -49,5 +51,14 @@ describe("check event types", () => {
     test("ClearCompleted", () => {
         const event = new ClearCompleted();
         expect(wasm.check_rust_event_ClearCompleted(event)).toEqual(JSON.stringify(event.detail));
+    });
+    test("Reposition", () => {
+        const event = new Reposition({
+            src: [1,0],
+            dest: [2,0],
+            side: DropSide.Top
+        });
+
+        expect(wasm.check_rust_event_Reposition(event)).toEqual(JSON.stringify(event.detail));
     });
 });

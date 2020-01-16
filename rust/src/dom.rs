@@ -100,6 +100,10 @@ fn item(world:Rc<World>, entity_id:EntityId) -> Dom {
         .event(clone!(world => move |event:ChangeTodoEvent| {
             actions::change_todo(&world, event.data().id, &event.data().label);
         }))
+        .event(clone!(world => move |event:RepositionEvent| {
+            let data = event.data();
+            actions::reposition(&world, data.src, data.dest, data.side);
+        }))
     })
 }
 fn footer(world:Rc<World>) -> Dom {

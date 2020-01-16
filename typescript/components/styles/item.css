@@ -32,6 +32,7 @@ li .toggle {
     position: absolute;
     top: 0;
     bottom: 0;
+    left: 30px;
     margin: auto 0;
     border: none; /* Mobile Safari */
     -webkit-appearance: none;
@@ -43,6 +44,7 @@ li .toggle {
 }
 
 li .toggle + label {
+    margin-left: 30px;
     /*
         Firefox requires \`#\` to be escaped - https://bugzilla.mozilla.org/show_bug.cgi?id=922433
         IE and Edge requires *everything* to be escaped to render, so we do that instead of just the \`#\` - https://developer.microsoft.com/en-us/microsoft-edge/platform/issues/7157459/
@@ -86,6 +88,7 @@ li .destroy {
     transition: color 0.2s ease-out;
 }
 
+
 li .destroy:hover {
     color: #af5b5e;
 }
@@ -98,10 +101,34 @@ li:hover .destroy {
     display: block;
 }
 
+div .dragicon {
+    display: none;
+    position: absolute;
+    left: 10px;
+    height: 60px;
+    line-height: 60px;
+    color: grey;
+    cursor: pointer;
+}
+div:hover .dragicon {
+    display: block;
+}
+
 li .edit {
     display: none;
 }
 
 li.editing:last-child {
     margin-bottom: -1px;
+}
+
+li.hidden {
+    visibility: hidden;
+}
+
+div.dropside-top {
+    border-top: blue 1px solid;
+}
+div.dropside-bottom {
+    border-bottom: blue 1px solid;
 }

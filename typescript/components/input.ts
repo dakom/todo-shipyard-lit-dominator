@@ -1,7 +1,7 @@
 import common_css from "@styles/common.css";
 import input_css from "@styles/input.css";
 import { customElement, html, LitElement, css} from "lit-element";
-import {KEYS} from "@components/types/types";
+import {KEYS} from "@utils/keys";
 import { AddTodo } from "@events/events";
 
 @customElement("todo-input")

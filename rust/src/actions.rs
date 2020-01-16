@@ -13,6 +13,7 @@ use crate::components::*;
 use crate::actions;
 use crate::signals;
 use crate::storage;
+use crate::events::{DropSide};
 use shipyard::prelude::*;
 use web_sys::{window, Storage};
 use std::rc::Rc;
@@ -57,6 +58,35 @@ pub fn change_todo(world:&World, id:EntityId, label:&str) {
     world.run::<&mut Label, _, _>(|labels| {
         *(&labels).get(id).unwrap().0.lock_mut() = label.to_string();
     });
+}
+
+pub fn reposition(world:&World, src:EntityId, dest:EntityId, side:DropSide) {
+    let (src_index, dest_index) = world.run::<Unique<&List>, _, _>(|list| {
+        let list = list.0.lock_ref();
+        let list = list.as_slice();
+
+        (list.iter().position(|id| *id == src), list.iter().position(|id| *id == dest))
+    });
+
+    //TODO: fix this right
+    let dest_index = match side {
+        DropSide::None => None,
+        DropSide::Top => dest_index,
+        DropSide::Bottom => 
+            if dest_index > src_index {
+                dest_index 
+            } else {
+                dest_index.map(|idx| idx+1)
+            }
+    };
+
+
+    if let (Some(src_index), Some(dest_index)) = (src_index, dest_index) {
+        world.run::<Unique<&List>, _, _>(|list| {
+            log::info!("moving from {} to {}", src_index, dest_index);
+            list.0.lock_mut().move_from_to(src_index, dest_index);
+        });
+    }
 }
 
 pub fn toggle_all_todos(world:&World, complete: bool) {

@@ -1,8 +1,6 @@
 import {LitElement, css, customElement, property} from "lit-element";
-import {nothing, html} from "lit-html";
-import {repeat} from 'lit-html/directives/repeat';
+import {html} from "lit-html";
 import list_css from "@styles/list.css";
-import {Item} from "@components/types/types";
 
 @customElement("todo-list")
 class List extends LitElement {
@@ -16,10 +14,3 @@ class List extends LitElement {
         `;
     }
 }
-/*
-${repeat(
-    items, 
-    item => item.id,
-    item => html`<todo-item id=${item.id} .item_id=${item.id} .label=${item.label} .completed=${item.completed} />`
-)}
-*/

@@ -1,4 +1,4 @@
-import {EntityId} from "@components/types/types";
+import {DropSide} from "@events/types/types";
 
 export class AddTodo extends CustomEvent<{label: string}> {
     constructor(detail: {label:string}) {
@@ -34,5 +34,17 @@ export class ToggleAllTodos extends CustomEvent<{complete: boolean}> {
 export class ClearCompleted extends CustomEvent<null> {
     constructor() {
         super("clear-completed");
+    }
+}
+
+interface RepositionDetail {
+    src: EntityId;
+    dest: EntityId;
+    side: DropSide;
+}
+
+export class Reposition extends CustomEvent<RepositionDetail> {
+    constructor(detail: RepositionDetail) {
+        super("reposition-list", { detail });
     }
 }
