@@ -27,8 +27,10 @@ class _Item extends LitElement {
         const on_change = (label:string) => this.dispatchEvent(new ChangeTodo({id, label}));
        
         //drag handlers
-        const on_dragicon_hover = () => this.draggable = true;
+        const on_dragicon_over = () => this.draggable = true;
+        const on_dragicon_out = () => this.draggable = false;
         const on_dragstart = (evt:DragEvent) => {
+            //delay is necessary: https://stackoverflow.com/questions/36379184/html5-draggable-hide-original-element/36385912#36385912
             requestAnimationFrame(() => this.dragging = true);
             evt.dataTransfer.setData("text/plain", JSON.stringify(id));
         }
@@ -66,7 +68,7 @@ class _Item extends LitElement {
             ? html`<todo-edit-line @stop-editing=${() => this.editing = false} .on_change=${on_change} .label=${label} .item_id=${id} />` 
             : html`
                 <li class=${classMap({completed: complete, hidden: this.dragging})} 
-                    draggable=${this.draggable} 
+                    .draggable=${this.draggable} 
                     @dragend=${on_dragend.bind(this)} 
                     @dragover=${on_dragover.bind(this)}
                     @dragenter=${on_dragenter.bind(this)}
@@ -75,7 +77,7 @@ class _Item extends LitElement {
                     @drop=${on_drop.bind(this)}
                     >
                     <div class="view" class=${classMap({["dropside-before"]: this.dropside === DropSide.Before, ["dropside-after"]: this.dropside === DropSide.After})}>
-                        <div class="dragicon" @mouseover=${on_dragicon_hover.bind(this)}>☰</div>
+                        <div class="dragicon" @mouseover=${on_dragicon_over.bind(this)} @mouseout=${on_dragicon_out.bind(this)}>☰</div>
                         <input class="toggle" type="checkbox" .checked=${complete} @change=${on_toggle.bind(this)}/>
                         <label @dblclick=${() => this.editing = true}>${label}</label>
                         <button class="destroy" @click=${on_remove.bind(this)} ></button>
