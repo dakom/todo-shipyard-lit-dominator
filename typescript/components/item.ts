@@ -53,7 +53,7 @@ class _Item extends LitElement {
         const set_dropside = (evt:DragEvent) => {
             if(!this.dragging) {
                 //based on CSS, which is using hard pixel values anyway
-                this.dropside = (evt.offsetY > 25) ? DropSide.Bottom : DropSide.Top;
+                this.dropside = (evt.offsetY < 25) ? DropSide.Before : DropSide.After;
                 evt.preventDefault();
             }
         }
@@ -74,7 +74,7 @@ class _Item extends LitElement {
                     @dragstart=${on_dragstart.bind(this)}
                     @drop=${on_drop.bind(this)}
                     >
-                    <div class="view" class=${classMap({["dropside-bottom"]: this.dropside === DropSide.Bottom, ["dropside-top"]: this.dropside === DropSide.Top})}>
+                    <div class="view" class=${classMap({["dropside-before"]: this.dropside === DropSide.Before, ["dropside-after"]: this.dropside === DropSide.After})}>
                         <div class="dragicon" @mouseover=${on_dragicon_hover.bind(this)}>☰</div>
                         <input class="toggle" type="checkbox" .checked=${complete} @change=${on_toggle.bind(this)}/>
                         <label @dblclick=${() => this.editing = true}>${label}</label>

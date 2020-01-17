@@ -56,7 +56,7 @@ describe("check event types", () => {
         const event = new Reposition({
             src: [1,0],
             dest: [2,0],
-            side: DropSide.Top
+            side: DropSide.Before
         });
 
         expect(wasm.check_rust_event_Reposition(event)).toEqual(JSON.stringify(event.detail));

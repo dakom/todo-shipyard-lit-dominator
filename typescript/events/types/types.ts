@@ -6,6 +6,6 @@ export interface Item {
 
 export enum DropSide {
     None,
-    Bottom,
-    Top,
+    Before,
+    After,
 }

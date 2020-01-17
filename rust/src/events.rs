@@ -109,8 +109,8 @@ pub struct Reposition {
 #[repr(u32)]
 pub enum DropSide {
     None,
-    Bottom,
-    Top,
+    Before,
+    After,
 }
 
 make_event!("reposition-list",Reposition);
@@ -164,7 +164,7 @@ cfg_if! {
                 Self {
                     src: serde_json::from_str("[1,0]").unwrap(),
                     dest: serde_json::from_str("[2,0]").unwrap(),
-                    side: DropSide::Top
+                    side: DropSide::Before
                 }
             }
         }

@@ -126,9 +126,9 @@ li.hidden {
     visibility: hidden;
 }
 
-div.dropside-top {
+div.dropside-before {
     border-top: blue 1px solid;
 }
-div.dropside-bottom {
+div.dropside-after {
     border-bottom: blue 1px solid;
 }

@@ -61,32 +61,38 @@ pub fn change_todo(world:&World, id:EntityId, label:&str) {
 }
 
 pub fn reposition(world:&World, src:EntityId, dest:EntityId, side:DropSide) {
-    let (src_index, dest_index) = world.run::<Unique<&List>, _, _>(|list| {
-        let list = list.0.lock_ref();
-        let list = list.as_slice();
+    world.run::<Unique<&List>, _, _>(|list| {
+        let indices = {    
+            let list = list.0.lock_ref();
+            let list = list.as_slice();
 
-        (list.iter().position(|id| *id == src), list.iter().position(|id| *id == dest))
-    });
+            (list.iter().position(|id| *id == src), list.iter().position(|id| *id == dest))
+        };
 
-    //TODO: fix this right
-    let dest_index = match side {
-        DropSide::None => None,
-        DropSide::Top => dest_index,
-        DropSide::Bottom => 
-            if dest_index > src_index {
-                dest_index 
-            } else {
-                dest_index.map(|idx| idx+1)
+        if let (Some(src_index), Some(dest_index)) = indices {
+            let dest_index = match side {
+                DropSide::Before =>  {
+                    if src_index > dest_index {
+                        dest_index
+                    } else {
+                        dest_index-1
+                    }
+                },
+                DropSide::After => {
+                    if src_index < dest_index {
+                        dest_index
+                    } else {
+                        dest_index+1
+                    }
+                },
+                _ => src_index 
+            };
+
+            if src_index != dest_index {
+                list.0.lock_mut().move_from_to(src_index, dest_index);
             }
-    };
-
-
-    if let (Some(src_index), Some(dest_index)) = (src_index, dest_index) {
-        world.run::<Unique<&List>, _, _>(|list| {
-            log::info!("moving from {} to {}", src_index, dest_index);
-            list.0.lock_mut().move_from_to(src_index, dest_index);
-        });
-    }
+        }
+    });
 }
 
 pub fn toggle_all_todos(world:&World, complete: bool) {
