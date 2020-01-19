@@ -5,11 +5,11 @@ use crate::storage;
 pub const SAVE:&'static str = "SAVE";
 
 pub fn register_workloads(world:&World) {
-    world.add_workload(SAVE, Save); 
+    world.add_workload::<Save, _>(SAVE); 
 }
 
 #[system(Save)]
-pub fn run (save_tag:Unique<&mut SaveTag>, list:Unique<&List>, labels:&Label, completes:&Complete) {
+pub fn run (mut save_tag:Unique<&mut SaveTag>, list:Unique<&List>, labels:&Label, completes:&Complete) {
     if save_tag.0 {
         log::info!("SAVING!....");
         let items:Vec<(String, bool)> = 

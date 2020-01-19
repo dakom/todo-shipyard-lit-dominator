@@ -13,19 +13,15 @@ use std::rc::Rc;
 use crate::dom::{ListItem};
 
 pub fn phase(world:&World) -> impl Signal<Item = PhaseType> {
-    world.run::<Unique<&Phase>, _, _>(|phase| {
-        phase.0.signal()
-    })
+    world.borrow::<Unique<&Phase>>().0.signal()
 }
 
 pub fn filter_js(world:&World) -> impl Signal<Item = JsValue> {
-    world.run::<Unique<&Filter>, _, _>(|filter| {
-        filter.0.signal()
-            .map(|filter| {
-                let filter = filter as u32 as f64;
-                JsValue::from_f64(filter)
-            })
-    })
+    world.borrow::<Unique<&Filter>>().0.signal()
+        .map(|filter| {
+            let filter = filter as u32 as f64;
+            JsValue::from_f64(filter)
+        })
 }
 
 #[derive(PartialEq, Copy, Clone)]
@@ -35,18 +31,18 @@ pub enum SignalFilterType {
 }
 
 pub fn item_ids(world:Rc<World>, filter_type:Option<SignalFilterType>) -> impl SignalVec<Item = EntityId> {
-    let list_signal = world.run::<Unique<&List>, _, _>(|list| { 
-        list.0.signal_vec()
-    });
+    let list_signal = {
+        world.borrow::<Unique<&List>>().0.signal_vec()
+    };
 
     list_signal
         .filter_signal_cloned(move |entity_id| {
-            let (filter_signal, complete_signal) = world.run::<(Unique<&Filter>, &Complete), _, _>(|(filter, completes)| {
+            let (filter, completes) = world.borrow::<(Unique<&Filter>, &Complete)>();
+            let (filter_signal, complete_signal) = 
                 (
                     filter.0.signal(),
                     (&completes).get(*entity_id).unwrap().0.signal()
-                )
-            });
+                );
 
             map_ref!(
                 let filter = filter_signal, 
@@ -93,10 +89,11 @@ pub fn item_js(world:&World, entity_id:EntityId) -> impl Signal<Item = JsValue> 
 
 pub fn item(world:&World, entity_id:EntityId) -> impl Signal<Item = ListItem> {
 
-    let (label, complete) = world.run::<(&Label, &Complete), _, _>(|(labels, completes)| {
+    let (label, complete) = { 
+        let (labels, completes) = world.borrow::<(&Label, &Complete)>();
         let (label, complete) = (&labels, &completes).get(entity_id).unwrap();
         (label.0.signal_cloned(), complete.0.signal())
-    });
+    };
 
     map_ref! {
         label,
